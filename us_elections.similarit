@@ -1,0 +1,400 @@
+Linked Data--Linked Data	000
+Linked Data--DBpedia	1
+Linked Data--Galway	0
+Linked Data--United States	0
+Linked Data--Google	0
+Linked Data--Semantic Web 	0
+Linked Data--High on Fire	0
+Linked Data--Twitter	0
+Linked Data--Ohio	0
+Linked Data--Wright State University	0
+Linked Data--Dayton, Ohio 	0
+Linked Data--Scientific method	0
+Linked Data--Social influence	0
+Linked Data--Federal government of the United States	0
+Linked Data--Now That's What I Call Music! 	0
+Linked Data--Digital Enterprise Research Institute	0
+Linked Data--Traffic light	0
+Linked Data--Global Positioning System	0
+Linked Data--Montreal	0
+Linked Data--Social Network	0
+DBpedia--Linked Data	2
+DBpedia--DBpedia	000
+DBpedia--Galway	0
+DBpedia--United States	0
+DBpedia--Google	1
+DBpedia--Semantic Web 	0
+DBpedia--High on Fire	0
+DBpedia--Twitter	1
+DBpedia--Ohio	0
+DBpedia--Wright State University	0
+DBpedia--Dayton, Ohio 	0
+DBpedia--Scientific method	0
+DBpedia--Social influence	0
+DBpedia--Federal government of the United States	1
+DBpedia--Now That's What I Call Music! 	0
+DBpedia--Digital Enterprise Research Institute	0
+DBpedia--Traffic light	0
+DBpedia--Global Positioning System	1
+DBpedia--Montreal	0
+DBpedia--Social Network	0
+Galway--Linked Data	0
+Galway--DBpedia	0
+Galway--Galway	000
+Galway--United States	0
+Galway--Google	0
+Galway--Semantic Web 	0
+Galway--High on Fire	0
+Galway--Twitter	0
+Galway--Ohio	0
+Galway--Wright State University	0
+Galway--Dayton, Ohio 	0
+Galway--Scientific method	0
+Galway--Social influence	0
+Galway--Federal government of the United States	0
+Galway--Now That's What I Call Music! 	0
+Galway--Digital Enterprise Research Institute	0
+Galway--Traffic light	0
+Galway--Global Positioning System	0
+Galway--Montreal	0
+Galway--Social Network	0
+United States--Linked Data	0
+United States--DBpedia	0
+United States--Galway	0
+United States--United States	000
+United States--Google	0
+United States--Semantic Web 	0
+United States--High on Fire	0
+United States--Twitter	0
+United States--Ohio	2
+United States--Wright State University	1
+United States--Dayton, Ohio 	0
+United States--Scientific method	0
+United States--Social influence	0
+United States--Federal government of the United States	2
+United States--Now That's What I Call Music! 	0
+United States--Digital Enterprise Research Institute	0
+United States--Traffic light	1
+United States--Global Positioning System	1
+United States--Montreal	1
+United States--Social Network	0
+Google--Linked Data	0
+Google--DBpedia	0
+Google--Galway	0
+Google--United States	2
+Google--Google	000
+Google--Semantic Web 	0
+Google--High on Fire	0
+Google--Twitter	0
+Google--Ohio	0
+Google--Wright State University	0
+Google--Dayton, Ohio 	0
+Google--Scientific method	0
+Google--Social influence	0
+Google--Federal government of the United States	0
+Google--Now That's What I Call Music! 	0
+Google--Digital Enterprise Research Institute	0
+Google--Traffic light	0
+Google--Global Positioning System	0
+Google--Montreal	0
+Google--Social Network	0
+Semantic Web --Linked Data	2
+Semantic Web --DBpedia	2
+Semantic Web --Galway	0
+Semantic Web --United States	1
+Semantic Web --Google	1
+Semantic Web --Semantic Web 	000
+Semantic Web --High on Fire	0
+Semantic Web --Twitter	1
+Semantic Web --Ohio	0
+Semantic Web --Wright State University	0
+Semantic Web --Dayton, Ohio 	0
+Semantic Web --Scientific method	1
+Semantic Web --Social influence	0
+Semantic Web --Federal government of the United States	0
+Semantic Web --Now That's What I Call Music! 	0
+Semantic Web --Digital Enterprise Research Institute	0
+Semantic Web --Traffic light	1
+Semantic Web --Global Positioning System	1
+Semantic Web --Montreal	0
+Semantic Web --Social Network	0
+High on Fire--Linked Data	0
+High on Fire--DBpedia	0
+High on Fire--Galway	0
+High on Fire--United States	2
+High on Fire--Google	1
+High on Fire--Semantic Web 	0
+High on Fire--High on Fire	000
+High on Fire--Twitter	1
+High on Fire--Ohio	1
+High on Fire--Wright State University	0
+High on Fire--Dayton, Ohio 	0
+High on Fire--Scientific method	0
+High on Fire--Social influence	0
+High on Fire--Federal government of the United States	1
+High on Fire--Now That's What I Call Music! 	0
+High on Fire--Digital Enterprise Research Institute	0
+High on Fire--Traffic light	0
+High on Fire--Global Positioning System	0
+High on Fire--Montreal	1
+High on Fire--Social Network	0
+Twitter--Linked Data	0
+Twitter--DBpedia	0
+Twitter--Galway	0
+Twitter--United States	1
+Twitter--Google	1
+Twitter--Semantic Web 	0
+Twitter--High on Fire	0
+Twitter--Twitter	000
+Twitter--Ohio	0
+Twitter--Wright State University	0
+Twitter--Dayton, Ohio 	0
+Twitter--Scientific method	0
+Twitter--Social influence	0
+Twitter--Federal government of the United States	0
+Twitter--Now That's What I Call Music! 	0
+Twitter--Digital Enterprise Research Institute	0
+Twitter--Traffic light	0
+Twitter--Global Positioning System	0
+Twitter--Montreal	0
+Twitter--Social Network	0
+Ohio--Linked Data	0
+Ohio--DBpedia	0
+Ohio--Galway	0
+Ohio--United States	2
+Ohio--Google	0
+Ohio--Semantic Web 	0
+Ohio--High on Fire	0
+Ohio--Twitter	0
+Ohio--Ohio	000
+Ohio--Wright State University	2
+Ohio--Dayton, Ohio 	0
+Ohio--Scientific method	0
+Ohio--Social influence	0
+Ohio--Federal government of the United States	2
+Ohio--Now That's What I Call Music! 	0
+Ohio--Digital Enterprise Research Institute	0
+Ohio--Traffic light	0
+Ohio--Global Positioning System	1
+Ohio--Montreal	1
+Ohio--Social Network	0
+Wright State University--Linked Data	0
+Wright State University--DBpedia	0
+Wright State University--Galway	0
+Wright State University--United States	2
+Wright State University--Google	0
+Wright State University--Semantic Web 	0
+Wright State University--High on Fire	0
+Wright State University--Twitter	1
+Wright State University--Ohio	2
+Wright State University--Wright State University	000
+Wright State University--Dayton, Ohio 	0
+Wright State University--Scientific method	0
+Wright State University--Social influence	0
+Wright State University--Federal government of the United States	1
+Wright State University--Now That's What I Call Music! 	0
+Wright State University--Digital Enterprise Research Institute	0
+Wright State University--Traffic light	0
+Wright State University--Global Positioning System	1
+Wright State University--Montreal	0
+Wright State University--Social Network	0
+Dayton, Ohio --Linked Data	0
+Dayton, Ohio --DBpedia	0
+Dayton, Ohio --Galway	0
+Dayton, Ohio --United States	2
+Dayton, Ohio --Google	0
+Dayton, Ohio --Semantic Web 	0
+Dayton, Ohio --High on Fire	0
+Dayton, Ohio --Twitter	0
+Dayton, Ohio --Ohio	2
+Dayton, Ohio --Wright State University	2
+Dayton, Ohio --Dayton, Ohio 	000
+Dayton, Ohio --Scientific method	0
+Dayton, Ohio --Social influence	0
+Dayton, Ohio --Federal government of the United States	0
+Dayton, Ohio --Now That's What I Call Music! 	0
+Dayton, Ohio --Digital Enterprise Research Institute	0
+Dayton, Ohio --Traffic light	0
+Dayton, Ohio --Global Positioning System	0
+Dayton, Ohio --Montreal	0
+Dayton, Ohio --Social Network	0
+Scientific method--Linked Data	0
+Scientific method--DBpedia	0
+Scientific method--Galway	0
+Scientific method--United States	1
+Scientific method--Google	0
+Scientific method--Semantic Web 	0
+Scientific method--High on Fire	0
+Scientific method--Twitter	0
+Scientific method--Ohio	0
+Scientific method--Wright State University	0
+Scientific method--Dayton, Ohio 	0
+Scientific method--Scientific method	000
+Scientific method--Social influence	0
+Scientific method--Federal government of the United States	0
+Scientific method--Now That's What I Call Music! 	0
+Scientific method--Digital Enterprise Research Institute	0
+Scientific method--Traffic light	0
+Scientific method--Global Positioning System	0
+Scientific method--Montreal	0
+Scientific method--Social Network	0
+Social influence--Linked Data	0
+Social influence--DBpedia	0
+Social influence--Galway	0
+Social influence--United States	0
+Social influence--Google	0
+Social influence--Semantic Web 	0
+Social influence--High on Fire	0
+Social influence--Twitter	0
+Social influence--Ohio	0
+Social influence--Wright State University	0
+Social influence--Dayton, Ohio 	0
+Social influence--Scientific method	0
+Social influence--Social influence	000
+Social influence--Federal government of the United States	0
+Social influence--Now That's What I Call Music! 	0
+Social influence--Digital Enterprise Research Institute	0
+Social influence--Traffic light	0
+Social influence--Global Positioning System	0
+Social influence--Montreal	0
+Social influence--Social Network	0
+Federal government of the United States--Linked Data	0
+Federal government of the United States--DBpedia	0
+Federal government of the United States--Galway	0
+Federal government of the United States--United States	2
+Federal government of the United States--Google	0
+Federal government of the United States--Semantic Web 	0
+Federal government of the United States--High on Fire	0
+Federal government of the United States--Twitter	0
+Federal government of the United States--Ohio	0
+Federal government of the United States--Wright State University	0
+Federal government of the United States--Dayton, Ohio 	0
+Federal government of the United States--Scientific method	0
+Federal government of the United States--Social influence	0
+Federal government of the United States--Federal government of the United States	000
+Federal government of the United States--Now That's What I Call Music! 	0
+Federal government of the United States--Digital Enterprise Research Institute	0
+Federal government of the United States--Traffic light	0
+Federal government of the United States--Global Positioning System	0
+Federal government of the United States--Montreal	0
+Federal government of the United States--Social Network	0
+Now That's What I Call Music! --Linked Data	0
+Now That's What I Call Music! --DBpedia	0
+Now That's What I Call Music! --Galway	0
+Now That's What I Call Music! --United States	1
+Now That's What I Call Music! --Google	1
+Now That's What I Call Music! --Semantic Web 	0
+Now That's What I Call Music! --High on Fire	0
+Now That's What I Call Music! --Twitter	1
+Now That's What I Call Music! --Ohio	0
+Now That's What I Call Music! --Wright State University	0
+Now That's What I Call Music! --Dayton, Ohio 	0
+Now That's What I Call Music! --Scientific method	0
+Now That's What I Call Music! --Social influence	0
+Now That's What I Call Music! --Federal government of the United States	0
+Now That's What I Call Music! --Now That's What I Call Music! 	000
+Now That's What I Call Music! --Digital Enterprise Research Institute	0
+Now That's What I Call Music! --Traffic light	0
+Now That's What I Call Music! --Global Positioning System	0
+Now That's What I Call Music! --Montreal	1
+Now That's What I Call Music! --Social Network	0
+Digital Enterprise Research Institute--Linked Data	1
+Digital Enterprise Research Institute--DBpedia	1
+Digital Enterprise Research Institute--Galway	2
+Digital Enterprise Research Institute--United States	1
+Digital Enterprise Research Institute--Google	1
+Digital Enterprise Research Institute--Semantic Web 	0
+Digital Enterprise Research Institute--High on Fire	0
+Digital Enterprise Research Institute--Twitter	0
+Digital Enterprise Research Institute--Ohio	0
+Digital Enterprise Research Institute--Wright State University	0
+Digital Enterprise Research Institute--Dayton, Ohio 	0
+Digital Enterprise Research Institute--Scientific method	1
+Digital Enterprise Research Institute--Social influence	0
+Digital Enterprise Research Institute--Federal government of the United States	1
+Digital Enterprise Research Institute--Now That's What I Call Music! 	0
+Digital Enterprise Research Institute--Digital Enterprise Research Institute	000
+Digital Enterprise Research Institute--Traffic light	0
+Digital Enterprise Research Institute--Global Positioning System	0
+Digital Enterprise Research Institute--Montreal	0
+Digital Enterprise Research Institute--Social Network	0
+Traffic light--Linked Data	0
+Traffic light--DBpedia	0
+Traffic light--Galway	0
+Traffic light--United States	1
+Traffic light--Google	0
+Traffic light--Semantic Web 	0
+Traffic light--High on Fire	0
+Traffic light--Twitter	0
+Traffic light--Ohio	2
+Traffic light--Wright State University	0
+Traffic light--Dayton, Ohio 	0
+Traffic light--Scientific method	0
+Traffic light--Social influence	0
+Traffic light--Federal government of the United States	0
+Traffic light--Now That's What I Call Music! 	0
+Traffic light--Digital Enterprise Research Institute	0
+Traffic light--Traffic light	000
+Traffic light--Global Positioning System	0
+Traffic light--Montreal	1
+Traffic light--Social Network	0
+Global Positioning System--Linked Data	0
+Global Positioning System--DBpedia	0
+Global Positioning System--Galway	0
+Global Positioning System--United States	2
+Global Positioning System--Google	0
+Global Positioning System--Semantic Web 	0
+Global Positioning System--High on Fire	0
+Global Positioning System--Twitter	0
+Global Positioning System--Ohio	1
+Global Positioning System--Wright State University	0
+Global Positioning System--Dayton, Ohio 	0
+Global Positioning System--Scientific method	0
+Global Positioning System--Social influence	0
+Global Positioning System--Federal government of the United States	1
+Global Positioning System--Now That's What I Call Music! 	0
+Global Positioning System--Digital Enterprise Research Institute	0
+Global Positioning System--Traffic light	0
+Global Positioning System--Global Positioning System	000
+Global Positioning System--Montreal	1
+Global Positioning System--Social Network	0
+Montreal--Linked Data	0
+Montreal--DBpedia	0
+Montreal--Galway	0
+Montreal--United States	2
+Montreal--Google	0
+Montreal--Semantic Web 	0
+Montreal--High on Fire	0
+Montreal--Twitter	0
+Montreal--Ohio	0
+Montreal--Wright State University	0
+Montreal--Dayton, Ohio 	0
+Montreal--Scientific method	0
+Montreal--Social influence	0
+Montreal--Federal government of the United States	0
+Montreal--Now That's What I Call Music! 	0
+Montreal--Digital Enterprise Research Institute	0
+Montreal--Traffic light	0
+Montreal--Global Positioning System	0
+Montreal--Montreal	000
+Montreal--Social Network	0
+Social Network--Linked Data	0
+Social Network--DBpedia	0
+Social Network--Galway	0
+Social Network--United States	0
+Social Network--Google	0
+Social Network--Semantic Web 	0
+Social Network--High on Fire	0
+Social Network--Twitter	0
+Social Network--Ohio	0
+Social Network--Wright State University	0
+Social Network--Dayton, Ohio 	0
+Social Network--Scientific method	0
+Social Network--Social influence	1
+Social Network--Federal government of the United States	0
+Social Network--Now That's What I Call Music! 	0
+Social Network--Digital Enterprise Research Institute	0
+Social Network--Traffic light	0
+Social Network--Global Positioning System	0
+Social Network--Montreal	0
+Social Network--Social Network	000
