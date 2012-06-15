@@ -56,7 +56,7 @@ public class TopicSpecificSimilarityCalculator {
 			parser.setWikipediaPage(link);
 			secondLinks.put(link, parser.getLinks());
 		}
-		System.out.println(secondLinks);
+		//System.out.println(secondLinks);
 			
 		return calculateWeights(secondLinks);
 	}
@@ -65,24 +65,27 @@ public class TopicSpecificSimilarityCalculator {
 		Map<String, Integer> results = new HashMap<String, Integer>();
 		for(String firstLink: secondLinks.keySet()){
 			List<String> links = secondLinks.get(firstLink);
-			if(links.contains(wikipediaTopic))
-				results.put(firstLink, 3);
-			else
-				results.put(firstLink, 2);
+			if(links!=null)
+				if(links.contains(wikipediaTopic))
+					results.put(firstLink, 3);
+				else
+					results.put(firstLink, 2);
 		}
 		for(String firstLink: secondLinks.keySet()){
 			List<String> links = secondLinks.get(firstLink);
-			for(String secondLink: links){
-				if(!results.keySet().contains(secondLink))
-					results.put(secondLink, 1);
-			}
+			if(links!=null)
+				for(String secondLink: links){
+					if(!results.keySet().contains(secondLink))
+						results.put(secondLink, 1);
+				}
 		}
 		return results;
 	}
 	
 	public static void main(String[] args) {
 		try {
-			Writer write = new FileWriter(new File("us_elections.similarit"));
+			Writer write = new FileWriter(new File("us_elections_links.ranking"));
+			//United_States_presidential_election,_2012
 			TopicSpecificSimilarityCalculator wikiCalc = new TopicSpecificSimilarityCalculator("United_States_presidential_election,_2012");
 			Map<String, Integer> relatedLinks = wikiCalc.calculate();
 			for(String link: relatedLinks.keySet()){

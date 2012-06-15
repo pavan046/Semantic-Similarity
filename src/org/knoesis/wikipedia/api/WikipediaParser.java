@@ -161,8 +161,9 @@ public class WikipediaParser {
 	}
 	
 	public static void main(String[] args) {
-		WikipediaParser wikiParser = new WikipediaParser("Independent (politician)");
-		System.out.println(wikiParser.getLinks());
+		WikipediaParser wikiParser = new WikipediaParser("United_States_presidential_election,_2011");
+		for(String link: wikiParser.getLinks())
+		System.out.println(link);
 	}
 
 }
