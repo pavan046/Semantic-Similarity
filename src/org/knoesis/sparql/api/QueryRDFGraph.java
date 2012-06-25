@@ -57,6 +57,6 @@ public class QueryRDFGraph {
 		
 		
 		// This method is used to format the output as per your requirements.
-		ResultSetFormatter.output(querygraph.query(),ResultsFormat.FMT_RS_JSON);
+		//ResultSetFormatter.output(querygraph.query(),ResultsFormat.FMT_RS_JSON);
 	}
 }
