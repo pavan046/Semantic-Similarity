@@ -13,7 +13,12 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import org.knoesis.wikipedia.api.WikipediaParser;
-
+/**
+ * This class is used for calculating the relatedness between two concepts 
+ * based on their relatedness concepts. 
+ * @author pavan
+ *
+ */
 public class BiConceptRelatednessCalculator {
 
 	private static String conceptOne, conceptTwo;
@@ -23,7 +28,7 @@ public class BiConceptRelatednessCalculator {
 	public BiConceptRelatednessCalculator(String conceptOne, String conceptTwo) {
 		this.conceptOne = conceptOne;
 		this.conceptTwo = conceptTwo;
-		parser = new WikipediaParser(conceptOne);
+		parser = new WikipediaParser();
 	}
 
 	public Map<String, Integer> calculate(){

@@ -1,11 +1,11 @@
-package org.knoesis.sparql.api;
+package org.knoesis.test;
 
 
 import com.hp.hpl.jena.query.ResultSetFormatter;
 import com.hp.hpl.jena.sparql.engine.http.QueryEngineHTTP;
 import com.hp.hpl.jena.sparql.resultset.ResultsFormat;
 
-/*
+/* TODO: I dont understand the necessity of this class??
  * This class queries the given RDF dataset with the given SPARQL query
  */
 public class QueryRDFGraph {

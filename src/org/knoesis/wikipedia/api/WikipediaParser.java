@@ -100,9 +100,13 @@ public class WikipediaParser {
 		conn = new HttpConnector(WikipediaConstants.API_URL);
 	}
 	
-	public void setWikipediaPage(String wikipediaPage){
-		this.wikipediaPage = wikipediaPage;
+	public WikipediaParser(){
+		//DO Nothing but the class using this constructor has to call 
+		// the setWikipediaPage.
+		this.format = Format.JSON;
+		conn = new HttpConnector(WikipediaConstants.API_URL);
 	}
+	
 	
 	public WikipediaParser(String wikipediaPage) {
 		WikipediaParser.wikipediaPage = wikipediaPage;
@@ -110,6 +114,10 @@ public class WikipediaParser {
 		conn = new HttpConnector(WikipediaConstants.API_URL);
 	}
 
+	public void setWikipediaPage(String wikipediaPage){
+		this.wikipediaPage = wikipediaPage;
+	}
+	
 	/**
 	 * initializes the parameters for every call to the connect to the API
 	 * 

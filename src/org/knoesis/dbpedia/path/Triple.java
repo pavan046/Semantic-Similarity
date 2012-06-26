@@ -1,4 +1,4 @@
-package org.knoesis.sparql.api;
+package org.knoesis.dbpedia.path;
 
 public class Triple {
 

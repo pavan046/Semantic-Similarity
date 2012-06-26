@@ -47,7 +47,14 @@ public class TopicSpecificSimilarityCalculator {
 		this.hops = 2;
 		parser = new WikipediaParser(wikipediaTopic);
 	}
-	
+	/**
+	 * FIXME: In this method, the articles retreived can be 
+	 * 		 1. Categories -- Ignore
+	 * 		 2. Wikipedia  -- Not sure what this is
+	 * 		 3. Templates -- Remove Template to compare.
+	 * 		 4. Find more
+	 * @return
+	 */
 	public Map<String, Integer> calculate(){
 		List<String> firstLinks = parser.getLinks();
 		Map<String, List<String>> secondLinks = new HashMap<String, List<String>>();
