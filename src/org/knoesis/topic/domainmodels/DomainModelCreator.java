@@ -6,6 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.knoesis.dbpedia.path.DBpediaPathGenerator;
@@ -13,6 +14,8 @@ import org.knoesis.dbpedia.path.Triple;
 import org.knoesis.utils.EntityEncoder;
 import org.knoesis.utils.Utils;
 import org.knoesis.wikipedia.api.WikipediaParser;
+
+import com.hp.hpl.jena.sparql.function.library.date;
 
 /**
  * 
@@ -30,6 +33,7 @@ public class DomainModelCreator {
 	private WikipediaParser parser;
 	private String topic;
 	private DBpediaPathGenerator pathGenerator;
+	
 	/*
 	 * Contructor
 	 * This will set the topic and use wikipedia parser to get all the links in the wikipedia page
@@ -53,15 +57,22 @@ public class DomainModelCreator {
 	 */
 	public List<Triple> createModel() throws InterruptedException, IOException{
 		List<Triple> triples = new ArrayList<Triple>();
-
+		long count = 0;
 		List<String> links = parser.getLinks();
 		for(String link: links){
 			String conceptDbpedia = translateConcept(link);
+			System.out.println("Dbpedia concept is-------" + conceptDbpedia);
 			if(conceptDbpedia!= null){
-				List<Triple> pathTriples = pathGenerator.generateTriples(topic, link);
-				List<String> entities = pathGenerator.getAllConnectedEntities(topic, link);
-				if(pathTriples != null)
+				List<Triple> pathTriples = pathGenerator.generateTriples(topic, conceptDbpedia);
+				
+				//List<String> entities = pathGenerator.getAllConnectedEntities(topic, conceptDbpedia);
+				
+				// Count of number of triples.
+				count = count + pathTriples.size();
+				if(pathTriples != null){
+					System.out.println("No of Triples: " + count);
 					triples.addAll(pathTriples);
+				}
 			}
 		}
 
@@ -81,7 +92,7 @@ public class DomainModelCreator {
 		 * FIXME: Discuss about what every property of the article is and then 
 		 * 		  remove it
 		 */
-		if(!isCategory(concept) && !isTemplate(concept) && !isWikipedia(concept) && !hasNum(concept)){
+		if(isCategory(concept) || isTemplate(concept) || isWikipedia(concept) || hasNum(concept)){
 			return null;
 		}
 		else{
@@ -125,17 +136,16 @@ public String getTopic() {
 
 
 public static void main(String[] args) throws InterruptedException, IOException {
-
-	//		FileWriter writer = new FileWriter(new File("Triples.n3"));
-	//		BufferedWriter buffer = new BufferedWriter(writer);
+	
+	System.out.println(new Date() + " Starting the process");
 	DomainModelCreator topic_triples = new DomainModelCreator("United_States_presidential_election,_2012");
 	List<Triple> triples = topic_triples.createModel();
 	for(Triple triple :triples){
 		//			buffer.append(triple.toString());
 		//			buffer.append("\n");
-
 		System.out.println(triple.toString());
 	}
+	System.out.println(new Date() + " Process Completed");
 }
 
 }

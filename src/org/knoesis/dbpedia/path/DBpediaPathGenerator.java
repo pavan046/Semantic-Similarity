@@ -43,14 +43,16 @@ public class DBpediaPathGenerator {
 		String queryString = createSparqlQueryForShrtstPath(conceptOne, conceptTwo);
 		ResultSet shortestPathResults;
 		
-		QueryRDFGraph queryExecuter = new QueryRDFGraph(graphURI, queryString);
+		
+		//QueryRDFGraph queryExecuter = new QueryRDFGraph(graphURI, queryString);
 		try {
+			
 			queryEngine = new QueryEngineHTTP("http://dbpedia.org/sparql",queryString);
 			shortestPathResults = queryEngine.execSelect();
 		} catch (ResultSetException e) {
 			// TODO Auto-generated catch block
 			Utils.sleep(7);
-			shortestPathResults = queryExecuter.query();
+			shortestPathResults = queryEngine.execSelect();
 			//e.printStackTrace();
 		}
 		return shortestPathResults;
@@ -123,11 +125,24 @@ public class DBpediaPathGenerator {
 	 */
 	public String createSparqlQueryToGetProperties(String conceptOne, String conceptTwo){
 		
+		// Here isaURI is used to check if the given concept is of the form http:dbpedia.org/../conceptOne
+		// or just the conceptOne
 		Boolean isaURI = false;
 		String sparqlQuery;
-		sparqlQuery = "SELECT ?predicate WHERE \n" +
-								  "{" + " <http://dbpedia.org/resource/" + conceptOne + "> " +" ?predicate "+ " <http://dbpedia.org/resource/" + conceptTwo + "> " +". \n" +
+		if(conceptOne.matches("(.*)http://dbpedia.org/resource(.*)"))
+			isaURI = true;
+		
+		if(isaURI){
+			sparqlQuery = "SELECT ?predicate WHERE \n" +
+			  "{<" + conceptOne+">"+" ?predicate "+ "<"+conceptTwo +">"+". \n" +
+			  "}";
+		}else{
+			String conceptOneURI = "<http://dbpedia.org/resource/" + conceptOne + ">";
+			String conceptTwoURI = "<http://dbpedia.org/resource/" + conceptTwo + ">";
+			sparqlQuery = "SELECT ?predicate WHERE \n" +
+								  "{" + conceptOneURI+" ?predicate "+ conceptTwoURI +". \n" +
 								  "}";
+		}		
 		return sparqlQuery;
 	}
 	
@@ -150,11 +165,11 @@ public class DBpediaPathGenerator {
 				String entity = path.next().getResource("?route").toString();
 				allEntities.add(entity);
 			}
-		
-		
+				
 		for(int i = 0 ;i< allEntities.size()-1;i++ ){
 			String sub = "<"+allEntities.get(i)+">";
 			String obj = "<"+allEntities.get(i+1)+">";
+						
 			ResultSet predicates = getPredicate(allEntities.get(i), allEntities.get(i+1));
 			while(predicates.hasNext()){
 				String predicate ="<"+ predicates.next().getResource("?predicate").toString() +">";
@@ -195,10 +210,18 @@ public class DBpediaPathGenerator {
 	
 	public static void main(String[] args) {
 		String graphURI = "http://dbpedia.org/sparql/";
-		String conceptOne = "United_States_presidential_election,_2008";
-		String conceptTwo = "Mitt_Romney";
+		String conceptOne = "United_States_presidential_election,_2012";
+		String conceptTwo = "United_States_presidential_election,_2008";
 		DBpediaPathGenerator pathGenerator = new DBpediaPathGenerator();
+		//List<Triple> triples = pathGenerator.generateTriples(conceptOne, conceptTwo);
 		List<Triple> triples = pathGenerator.generateTriples(conceptOne, conceptTwo);
+		//ResultSet results = pathGenerator.getShortestPath(conceptOne, conceptTwo);
+		//ResultSet results = pathGenerator.getPredicate(conceptOne, conceptTwo);
+		System.out.println(triples.toString());
+		
+		//ResultSetFormatter.outputAsTSV(results);
+		
+		
 	}
 
 }
