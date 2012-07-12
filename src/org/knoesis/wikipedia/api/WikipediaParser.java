@@ -259,6 +259,12 @@ public class WikipediaParser {
 		return newLinks;
 	}
 	
+	/**
+	 * This method gets all the deleted links in the new page from that of the page in its 
+	 * revision history.
+	 * @param time
+	 * @return
+	 */
 	public List<String> getLinksDeleted(String time){
 		List<String> currentLinks = getLinks();
 		List<String> linksFromPastPage = getRevisionIDLinks(time);
