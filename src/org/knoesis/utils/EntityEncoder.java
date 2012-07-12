@@ -27,7 +27,6 @@ public class EntityEncoder {
 			//TODO: Make sure to handle this exception
 			e.printStackTrace();
 		}
-
 		return encodedReplaceCommas;
 	}
 

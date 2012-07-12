@@ -11,7 +11,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * The
+ * The objective of this class is given a URL (web service)
+ * with appropriate parameters returns the results. POST/GET
+ * 
  * @author pavan
  *
  */

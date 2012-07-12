@@ -7,9 +7,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.knoesis.http.connector.HttpConnector;
-
+/**
+ * This class connects to the word breaking service of the microsoft. 
+ * @author pavan
+ *
+ */
 public class WordBreaker {
-	
+	//TODO: This has to be moved to a constants file or a config file
 	private String API_URL = "http://web-ngram.research.microsoft.com/ngramwordbreaker/break.svc/";
 	private HttpConnector connection;
 	private Map<String,String> params;
