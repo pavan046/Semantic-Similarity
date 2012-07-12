@@ -34,7 +34,7 @@ public class DomainModelCreator {
 	private String topic;
 	private DBpediaPathGenerator pathGenerator;
 	
-	/*
+	/**
 	 * Contructor
 	 * This will set the topic and use wikipedia parser to get all the links in the wikipedia page
 	 * of given topic.
@@ -100,52 +100,53 @@ public class DomainModelCreator {
 		}
 		return dbpediaEncodedEntity;
 	}
-/*
- * Checking if it is of format Category:http...... 
- */
-public boolean isCategory(String entity){
-	return entity.matches("Category:(.*)");
-}
-
-/*
- * Checking if it is a Template
- */
-public boolean isTemplate(String entity){
-	return entity.matches("Template:(.*)");
-}
-
-/*
- * Checking if it is Wikipedia:...
- */
-public boolean isWikipedia(String entity){
-	return entity.matches("Wikipedia:(.*)");
-}
-
-public boolean hasNum(String entity){
-	return entity.matches("(.*)2016");
-}
-
-public void setTopic(String topic) {
-	this.topic = topic;
-}
-
-public String getTopic() {
-	return topic;
-}
-
-
-
-public static void main(String[] args) throws InterruptedException, IOException {
 	
-	System.out.println(new Date() + " Starting the process");
-	DomainModelCreator topic_triples = new DomainModelCreator("United_States_presidential_election,_2012");
-	List<Triple> triples = topic_triples.createModel();
-	for(Triple triple :triples){
-		//			buffer.append(triple.toString());
-		//			buffer.append("\n");
-		System.out.println(triple.toString());
+	/*
+	 * Checking if it is of format Category:http...... 
+	 */
+	public boolean isCategory(String entity){
+		return entity.matches("Category:(.*)");
 	}
-	System.out.println(new Date() + " Process Completed");
-}
+	
+	/*
+	 * Checking if it is a Template
+	 */
+	public boolean isTemplate(String entity){
+		return entity.matches("Template:(.*)");
+	}
+	
+	/*
+	 * Checking if it is Wikipedia:...
+	 */
+	public boolean isWikipedia(String entity){
+		return entity.matches("Wikipedia:(.*)");
+	}
+	
+	public boolean hasNum(String entity){
+		return entity.matches("(.*)2016");
+	}
+	
+	public void setTopic(String topic) {
+		this.topic = topic;
+	}
 
-}
+	public String getTopic() {
+		return topic;
+	}
+	
+	
+	
+	public static void main(String[] args) throws InterruptedException, IOException {
+		
+		System.out.println(new Date() + " Starting the process");
+		DomainModelCreator topic_triples = new DomainModelCreator("United_States_presidential_election,_2012");
+		List<Triple> triples = topic_triples.createModel();
+		for(Triple triple :triples){
+			//			buffer.append(triple.toString());
+			//			buffer.append("\n");
+			System.out.println(triple.toString());
+		}
+		System.out.println(new Date() + " Process Completed");
+	}
+	
+	}

@@ -41,16 +41,13 @@ public class DBpediaPathGenerator {
 	 */
 	public ResultSet getShortestPath(String conceptOne, String conceptTwo) {
 		String queryString = createSparqlQueryForShrtstPath(conceptOne, conceptTwo);
-		ResultSet shortestPathResults;
+		ResultSet shortestPathResults;		
 		
-		
-		//QueryRDFGraph queryExecuter = new QueryRDFGraph(graphURI, queryString);
 		try {
 			
 			queryEngine = new QueryEngineHTTP("http://dbpedia.org/sparql",queryString);
 			shortestPathResults = queryEngine.execSelect();
 		} catch (ResultSetException e) {
-			// TODO Auto-generated catch block
 			Utils.sleep(7);
 			shortestPathResults = queryEngine.execSelect();
 			//e.printStackTrace();

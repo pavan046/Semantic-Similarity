@@ -21,7 +21,6 @@ public class EntityEncoder {
 
 			String replaceSpace = entity.replace(" ", "_");
 			String encoded = URLEncoder.encode(replaceSpace, "UTF-8");
-			//String removingYear = encoded.replaceAll("[1-2][0-9][0-9][0-9]_", "");
 			encodedReplaceCommas = encoded.replaceAll("%2C", ",");
 			
 		} catch(UnsupportedEncodingException e){
