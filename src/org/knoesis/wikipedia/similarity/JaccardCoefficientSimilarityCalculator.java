@@ -10,10 +10,10 @@ import java.util.List;
  * TODO: Pramod this is a good exercise for u to learn. Make all the similarity 
  * 		 measures as an interface. 
  */
-public class JackardCoefficientSimilarityCalculator {
+public class JaccardCoefficientSimilarityCalculator {
 	private List<String> docOne, docTwo;
 	
-	public JackardCoefficientSimilarityCalculator(List<String> docOne, List<String> docTwo) {
+	public JaccardCoefficientSimilarityCalculator(List<String> docOne, List<String> docTwo) {
 		this.setDocOne(docOne);
 		this.setDocTwo(docTwo);
 	}
