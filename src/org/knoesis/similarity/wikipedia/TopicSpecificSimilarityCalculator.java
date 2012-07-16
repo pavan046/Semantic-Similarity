@@ -1,4 +1,4 @@
-package org.knoesis.wikipedia.similarity;
+package org.knoesis.similarity.wikipedia;
 
 import java.io.File;
 import java.io.FileWriter;

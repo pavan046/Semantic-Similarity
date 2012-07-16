@@ -1,4 +1,4 @@
-package org.knoesis.wikipedia.similarity;
+package org.knoesis.similarity;
 
 import java.util.List;
 
