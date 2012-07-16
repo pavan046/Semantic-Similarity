@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import org.knoesis.wikipedia.api.WikipediaParser;
+import org.knoesis.api.WikipediaParser;
 /**
  * This class is used for calculating the relatedness between two concepts 
  * based on their relatedness concepts. 

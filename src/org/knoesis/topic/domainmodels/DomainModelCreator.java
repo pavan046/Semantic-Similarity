@@ -9,11 +9,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.knoesis.dbpedia.path.DBpediaPathGenerator;
-import org.knoesis.dbpedia.path.Triple;
+import org.knoesis.api.DBpediaPathGenerator;
+import org.knoesis.api.WikipediaParser;
+import org.knoesis.models.Triple;
 import org.knoesis.utils.EntityEncoder;
 import org.knoesis.utils.Utils;
-import org.knoesis.wikipedia.api.WikipediaParser;
 
 import com.hp.hpl.jena.sparql.function.library.date;
 

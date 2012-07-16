@@ -1,9 +1,10 @@
-package org.knoesis.dbpedia.path;
+package org.knoesis.api;
 
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.knoesis.models.Triple;
 import org.knoesis.test.QueryRDFGraph;
 import org.knoesis.utils.Utils;
 

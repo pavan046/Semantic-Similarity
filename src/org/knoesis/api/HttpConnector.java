@@ -1,4 +1,4 @@
-package org.knoesis.http.connector;
+package org.knoesis.api;
 
 import java.io.BufferedReader;
 import java.io.IOException;

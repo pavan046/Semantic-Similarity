@@ -1,4 +1,4 @@
-package org.knoesis.dbpedia.path;
+package org.knoesis.test;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URI;

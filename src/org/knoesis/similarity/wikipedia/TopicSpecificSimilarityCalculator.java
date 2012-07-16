@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.knoesis.wikipedia.api.WikipediaParser;
+import org.knoesis.api.WikipediaParser;
 import org.openjena.atlas.logging.Log;
 
 /**

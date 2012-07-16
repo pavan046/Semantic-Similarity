@@ -1,4 +1,4 @@
-package org.knoesis.microsoft.ngram;
+package org.knoesis.api;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -6,19 +6,18 @@ import java.util.Map;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.knoesis.http.connector.HttpConnector;
 /**
  * This class connects to the word breaking service of the microsoft. 
  * @author pavan
  *
  */
-public class WordBreaker {
+public class MicrosoftNGramWordBreaker {
 	//TODO: This has to be moved to a constants file or a config file
 	private String API_URL = "http://web-ngram.research.microsoft.com/ngramwordbreaker/break.svc/";
 	private HttpConnector connection;
 	private Map<String,String> params;
 	
-	public WordBreaker(){
+	public MicrosoftNGramWordBreaker(){
 		connection = new HttpConnector(API_URL);
 	}
 	
@@ -60,7 +59,7 @@ public class WordBreaker {
 	}
 	
 	public static void main(String[] args) throws JSONException {
-		WordBreaker test = new WordBreaker();		
+		MicrosoftNGramWordBreaker test = new MicrosoftNGramWordBreaker();		
 		System.out.println(test.getBreakedWord("BarackObama"));
 	}
 	

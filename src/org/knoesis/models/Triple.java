@@ -1,4 +1,4 @@
-package org.knoesis.dbpedia.path;
+package org.knoesis.models;
 
 public class Triple {
 

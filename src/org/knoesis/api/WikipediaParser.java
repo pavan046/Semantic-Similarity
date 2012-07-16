@@ -1,4 +1,4 @@
-package org.knoesis.wikipedia.api;
+package org.knoesis.api;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,7 +11,7 @@ import java.util.Set;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.knoesis.http.connector.HttpConnector;
+import org.knoesis.utils.WikipediaConstants;
 
 /**
  * This class is responsible for the operations which is related to the action parse from wikipedia API
