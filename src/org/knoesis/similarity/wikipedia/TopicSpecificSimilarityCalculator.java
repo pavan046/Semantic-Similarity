@@ -10,7 +10,7 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.knoesis.api.WikipediaParser;
-import org.knoesis.similarity.JakkardCoefficientSimilarityCalculator;
+import org.knoesis.similarity.JaccardCoefficientSimilarityCalculator;
 import org.openjena.atlas.logging.Log;
 
 /**
@@ -99,7 +99,7 @@ public class TopicSpecificSimilarityCalculator {
 				results.put(secondLink, 2.0d);
 				continue;
 			}
-			double jakkardIndex = JakkardCoefficientSimilarityCalculator.calculate(firstLinks, links);
+			double jakkardIndex = JaccardCoefficientSimilarityCalculator.calculate(firstLinks, links);
 			if(links.contains(wikipediaTopic))
 				results.put(secondLink, 3.0d+jakkardIndex);
 			else

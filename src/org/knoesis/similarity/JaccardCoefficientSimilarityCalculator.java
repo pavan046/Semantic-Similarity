@@ -14,10 +14,10 @@ import java.util.TreeSet;
  * TODO: Pramod this is a good exercise for u to learn. Make all the similarity 
  * 		 measures as an interface. 
  */
-public class JakkardCoefficientSimilarityCalculator {
+public class JaccardCoefficientSimilarityCalculator {
 	private List<String> docOne, docTwo;
 	
-	public JakkardCoefficientSimilarityCalculator(List<String> docOne, List<String> docTwo) {
+	public JaccardCoefficientSimilarityCalculator(List<String> docOne, List<String> docTwo) {
 		this.setDocOne(docOne);
 		this.setDocTwo(docTwo);
 	}
@@ -88,7 +88,7 @@ public class JakkardCoefficientSimilarityCalculator {
 		list2.add("asas");
 		list2.add("aaas");
 		
-		JakkardCoefficientSimilarityCalculator test = new JakkardCoefficientSimilarityCalculator(list1, list2);
+		JaccardCoefficientSimilarityCalculator test = new JaccardCoefficientSimilarityCalculator(list1, list2);
 		System.out.println("The jaccard coeff is :" + test.calculate(list1, list2));
 	}
 	
