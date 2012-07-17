@@ -10,6 +10,7 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.knoesis.api.WikipediaParser;
+import org.knoesis.similarity.JakkardCoefficientSimilarityCalculator;
 import org.openjena.atlas.logging.Log;
 
 /**
@@ -61,7 +62,7 @@ public class TopicSpecificSimilarityCalculator {
 	 * 		 4. Find more
 	 * @return
 	 */
-	public Map<String, Integer> calculate(){
+	public Map<String, Double> calculate(){
 		List<String> firstLinks = parser.getLinks();
 		Map<String, List<String>> secondLinks = new HashMap<String, List<String>>();
 
@@ -76,47 +77,59 @@ public class TopicSpecificSimilarityCalculator {
 		}
 		//System.out.println(secondLinks);
 
-		return calculateWeights(secondLinks);
+		return calculateWeights(firstLinks, secondLinks);
 	}
 
-	private Map<String, Integer> calculateWeights(Map<String, List<String>> secondLinks){
-		Map<String, Integer> results = new HashMap<String, Integer>();
-		for(String firstLink: secondLinks.keySet()){
-			List<String> links = secondLinks.get(firstLink);
-			if(links!=null)
-				if(links.contains(wikipediaTopic))
-					results.put(firstLink, 3);
-				else
-					results.put(firstLink, 2);
-		}
-		for(String firstLink: secondLinks.keySet()){
-			List<String> links = secondLinks.get(firstLink);
-			if(links!=null)
-				for(String secondLink: links){
-					if(!results.keySet().contains(secondLink))
-						results.put(secondLink, 1);
-				}
-		}
-		return results;
-	}
-
-	public static void main(String[] args) {
-		logger.info("Starting the process for US Elections 2012 " + System.currentTimeMillis());
-				
-		try {
-			Writer write = new FileWriter(new File("obamacare_links.ranking_28th"));
-			//United_States_presidential_election,_2012
-			TopicSpecificSimilarityCalculator wikiCalc = new TopicSpecificSimilarityCalculator("Patient Protection and Affordable Care Act");
-			Map<String, Integer> relatedLinks = wikiCalc.calculate();
-			for(String link: relatedLinks.keySet()){
-				write.append(link+"\t"+relatedLinks.get(link)+"\n");
+	/**
+	 * This method calculates the weight based on following parameters
+	 * 
+	 * 1. Unidirectional or bidirectional relationship to the topic
+	 * 2. Jakkard co-efficient of the Topic to the first links 
+	 * 
+	 * @param firstLinks
+	 * @param secondLinks
+	 * @return
+	 */
+	private Map<String, Double> calculateWeights(List<String> firstLinks, Map<String, List<String>> secondLinks){
+		Map<String, Double> results = new HashMap<String, Double>();
+		for(String secondLink: secondLinks.keySet()){
+			List<String> links = secondLinks.get(secondLink);
+			// If there are no further links. Then return two since it is connected.
+			if(links==null){
+				results.put(secondLink, 2.0d);
+				continue;
 			}
-			write.close();
-		logger.info("Ending the process for US Elections 2012 " + System.currentTimeMillis());
+			double jakkardIndex = JakkardCoefficientSimilarityCalculator.calculate(firstLinks, links);
+			if(links.contains(wikipediaTopic))
+				results.put(secondLink, 3.0d+jakkardIndex);
+			else
+				results.put(secondLink, 2.0d+jakkardIndex);
+			
+			for(String thirdLink: links){
+				if(!results.keySet().contains(thirdLink))
+					results.put(thirdLink, 1.0d);
+			}
+		}
+			return results;
+		}
 
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		public static void main(String[] args) {
+			logger.info("Starting the process for US Elections 2012 " + System.currentTimeMillis());
+
+			try {
+				Writer write = new FileWriter(new File("analysis/olympics.model"));
+				//United_States_presidential_election,_2012
+				TopicSpecificSimilarityCalculator wikiCalc = new TopicSpecificSimilarityCalculator("2012 Summer Olympics");
+				Map<String, Double> relatedLinks = wikiCalc.calculate();
+				for(String link: relatedLinks.keySet()){
+					write.append(link+"\t"+relatedLinks.get(link)+"\n");
+				}
+				write.close();
+				logger.info("Ending the process for US Elections 2012 " + System.currentTimeMillis());
+
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
-}

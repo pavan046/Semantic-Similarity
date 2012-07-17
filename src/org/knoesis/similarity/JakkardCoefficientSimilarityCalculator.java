@@ -14,10 +14,10 @@ import java.util.TreeSet;
  * TODO: Pramod this is a good exercise for u to learn. Make all the similarity 
  * 		 measures as an interface. 
  */
-public class JaccardCoefficientSimilarityCalculator {
+public class JakkardCoefficientSimilarityCalculator {
 	private List<String> docOne, docTwo;
 	
-	public JaccardCoefficientSimilarityCalculator(List<String> docOne, List<String> docTwo) {
+	public JakkardCoefficientSimilarityCalculator(List<String> docOne, List<String> docTwo) {
 		this.setDocOne(docOne);
 		this.setDocTwo(docTwo);
 	}
@@ -28,7 +28,7 @@ public class JaccardCoefficientSimilarityCalculator {
 	 * @param docTwo
 	 * @return
 	 */
-	public double calculate(List<String> docOne, List<String> docTwo){
+	public static double calculate(List<String> docOne, List<String> docTwo){
 		
 		double jaccardCoeff = 0;
 		
@@ -49,7 +49,7 @@ public class JaccardCoefficientSimilarityCalculator {
 	 * @param docTwo
 	 * @return
 	 */
-	public Set<String> intersection(Set<String> set1,Set<String> set2){	
+	public static Set<String> intersection(Set<String> set1,Set<String> set2){	
 		Set<String> tmp = new HashSet<String>(set1);
 		boolean flag = tmp.retainAll(set2);
 		return tmp;
@@ -61,7 +61,7 @@ public class JaccardCoefficientSimilarityCalculator {
 	 * @param docTwo
 	 * @return
 	 */
-	public Set<String> union(Set<String> setA,Set<String> setB){
+	public static Set<String> union(Set<String> setA,Set<String> setB){
 		Set<String> tmp = new HashSet<String>(setA);
 		tmp.addAll(setB);
 		return tmp;
@@ -88,7 +88,7 @@ public class JaccardCoefficientSimilarityCalculator {
 		list2.add("asas");
 		list2.add("aaas");
 		
-		JaccardCoefficientSimilarityCalculator test = new JaccardCoefficientSimilarityCalculator(list1, list2);
+		JakkardCoefficientSimilarityCalculator test = new JakkardCoefficientSimilarityCalculator(list1, list2);
 		System.out.println("The jaccard coeff is :" + test.calculate(list1, list2));
 	}
 	
