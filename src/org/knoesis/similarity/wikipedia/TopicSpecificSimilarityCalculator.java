@@ -97,14 +97,19 @@ public class TopicSpecificSimilarityCalculator {
 			List<String> links = secondLinks.get(secondLink);
 			// If there are no further links. Then return two since it is connected.
 			if(links==null){
+				// Comment this line if you need just the jaccard coefficient
 				results.put(secondLink, 2.0d);
 				continue;
 			}
 			double jakkardIndex = JaccardCoefficientSimilarityCalculator.calculate(firstLinks, links);
+			// Comment the following if else loop for just the Jaccard coefficient
 			if(links.contains(wikipediaTopic))
 				results.put(secondLink, 3.0d+jakkardIndex);
 			else
 				results.put(secondLink, 2.0d+jakkardIndex);
+			
+			// Uncomment to print just the jaccardcoefficient
+			//results.put(secondLink, jakkardIndex);
 			// TODO: For now not considering the second hop
 			/*
 			 * for(String thirdLink: links){
@@ -121,7 +126,7 @@ public class TopicSpecificSimilarityCalculator {
 			logger.info("Starting the process for US Elections 2012 " + System.currentTimeMillis());
 
 			try {
-				Writer write = new FileWriter(new File("analysis/uselections.model"));
+				Writer write = new FileWriter(new File("analysis/uselections_jakkard.model"));
 				Writer writeTypes = new FileWriter(new File("analysis/uselections.types"));
 				//United_States_presidential_election,_2012
 				TopicSpecificSimilarityCalculator wikiCalc = new TopicSpecificSimilarityCalculator("United States presidential election, 2012");
