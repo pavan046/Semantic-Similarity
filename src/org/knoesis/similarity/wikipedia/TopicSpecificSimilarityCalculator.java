@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.knoesis.api.DBpediaTypeGetter;
 import org.knoesis.api.WikipediaParser;
 import org.knoesis.similarity.JaccardCoefficientSimilarityCalculator;
 import org.openjena.atlas.logging.Log;
@@ -104,11 +105,14 @@ public class TopicSpecificSimilarityCalculator {
 				results.put(secondLink, 3.0d+jakkardIndex);
 			else
 				results.put(secondLink, 2.0d+jakkardIndex);
-			
-			for(String thirdLink: links){
+			// TODO: For now not considering the second hop
+			/*
+			 * for(String thirdLink: links){
+			 
 				if(!results.keySet().contains(thirdLink))
 					results.put(thirdLink, 1.0d);
 			}
+			*/
 		}
 			return results;
 		}
@@ -117,14 +121,21 @@ public class TopicSpecificSimilarityCalculator {
 			logger.info("Starting the process for US Elections 2012 " + System.currentTimeMillis());
 
 			try {
-				Writer write = new FileWriter(new File("analysis/olympics.model"));
+				Writer write = new FileWriter(new File("analysis/uselections.model"));
+				Writer writeTypes = new FileWriter(new File("analysis/uselections.types"));
 				//United_States_presidential_election,_2012
-				TopicSpecificSimilarityCalculator wikiCalc = new TopicSpecificSimilarityCalculator("2012 Summer Olympics");
+				TopicSpecificSimilarityCalculator wikiCalc = new TopicSpecificSimilarityCalculator("United States presidential election, 2012");
 				Map<String, Double> relatedLinks = wikiCalc.calculate();
 				for(String link: relatedLinks.keySet()){
 					write.append(link+"\t"+relatedLinks.get(link)+"\n");
+					List<String> types = DBpediaTypeGetter.getType(link);
+					for(String type: types){
+						writeTypes.append(link+"\t"+type+"\n");
+					}
 				}
+			
 				write.close();
+				writeTypes.close();
 				logger.info("Ending the process for US Elections 2012 " + System.currentTimeMillis());
 
 			} catch (IOException e) {

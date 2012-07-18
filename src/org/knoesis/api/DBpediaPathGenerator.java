@@ -31,7 +31,19 @@ public class DBpediaPathGenerator {
 	//TODO: Move this to a constatns file or a configuration file
 	private final String graphURI = "http://dbpedia.org/sparql/";
 	//TODO: Please let me know why are these global variables
-	private QueryEngineHTTP queryEngine; 
+	private static QueryEngineHTTP queryEngine; 
+	
+	/**
+	 * This function executes the query on dbpedia sparql endpoing 
+	 * and returns the ResultSet of the query
+	 * @param query
+	 * @return
+	 */
+	public static ResultSet execDBpediaQuery (String query)throws ResultSetException{
+		queryEngine = new QueryEngineHTTP("http://dbpedia.org/sparql",query);
+		ResultSet results = queryEngine.execSelect();
+		return results;
+	}
 	
 	/**
 	 * This method queries dbdpedia/any other sparqlendpoint to get the 
@@ -45,12 +57,10 @@ public class DBpediaPathGenerator {
 		ResultSet shortestPathResults;		
 		
 		try {
-			
-			queryEngine = new QueryEngineHTTP("http://dbpedia.org/sparql",queryString);
-			shortestPathResults = queryEngine.execSelect();
+			shortestPathResults = this.execDBpediaQuery(queryString);
 		} catch (ResultSetException e) {
 			Utils.sleep(7);
-			shortestPathResults = queryEngine.execSelect();
+			shortestPathResults = this.execDBpediaQuery(queryString);
 			//e.printStackTrace();
 		}
 		return shortestPathResults;
@@ -127,6 +137,7 @@ public class DBpediaPathGenerator {
 		// or just the conceptOne
 		Boolean isaURI = false;
 		String sparqlQuery;
+		//FIXME: Not the way to do things. Make sure u check this using URL class.
 		if(conceptOne.matches("(.*)http://dbpedia.org/resource(.*)"))
 			isaURI = true;
 		
