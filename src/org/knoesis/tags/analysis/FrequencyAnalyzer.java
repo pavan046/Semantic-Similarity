@@ -1,6 +1,7 @@
 package org.knoesis.tags.analysis;
 
 import java.io.File;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +26,7 @@ import org.knoesis.models.AnnotatedTweet;
 public class FrequencyAnalyzer implements Analyzer{
 	private static int distinctUsersMentionKeyword = 0; 
 	private static int messagesMentionKeyword = 0;
+	private static long normalizedMessageCount = 0;
 	private static Map<String, Integer> twitterUsers = new HashMap<String, Integer>();
 	private List<AnnotatedTweet> tweets;
 	private String keyword;
@@ -56,16 +58,29 @@ public class FrequencyAnalyzer implements Analyzer{
 	
 	/**
 	 * This function counts the messages that mention the hashtag 
-	 * and the that mention just the keyword of the hashtag
+	 * and the that mention just the keyword of the hashtag. And
+	 * normalize this with the time period of the first to the last tweet
 	 * 
 	 * TODO: Might be good to involve the retweets to get to know the number of 
 	 * 		 distinct tweets (RTs)
 	 * 
-	 * FIXME: Normalize this with the time period of the first to the last tweet
+	 * 
 	 * 
 	 */
 	public void countMessages(){
-		messagesMentionKeyword = tweets.size();
+		int lastTweetNumber = tweets.size();
+		//messagesMentionKeyword = tweets.size();
+		
+		// Getting the start and end date of given set of tweets. Assuming they are sorted.
+		Date startDate = tweets.get(0).getTwitter4jTweet().getCreatedAt();
+		Date endDate = tweets.get(lastTweetNumber).getTwitter4jTweet().getCreatedAt();
+		
+		long timeDiffinMilliSecs = endDate.getTime() - startDate.getTime();
+		
+		long timeDiffinSecs = timeDiffinMilliSecs / 1000;
+		
+		normalizedMessageCount = lastTweetNumber / timeDiffinSecs;
+
 	}
 
 }
