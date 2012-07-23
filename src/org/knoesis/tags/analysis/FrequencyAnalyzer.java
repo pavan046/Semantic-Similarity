@@ -77,9 +77,9 @@ public class FrequencyAnalyzer implements Analyzer{
 		
 		long timeDiffinMilliSecs = endDate.getTime() - startDate.getTime();
 		
-		long timeDiffinSecs = timeDiffinMilliSecs / 1000;
+		long timeDiffinMins = timeDiffinMilliSecs/(1000*60);
 		
-		normalizedMessageCount = lastTweetNumber / timeDiffinSecs;
+		normalizedMessageCount = lastTweetNumber/timeDiffinMins;
 
 	}
 

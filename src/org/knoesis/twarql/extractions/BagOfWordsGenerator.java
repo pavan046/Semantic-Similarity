@@ -33,7 +33,7 @@ public class BagOfWordsGenerator implements Extractor<Map<String, Integer>> {
 		Set<URLModel> urlModels = aTweet.getUrlModels();
 		if (urlModels != null){
 			for (URLModel urlModel: urlModels)
-			tweetText.replace(urlModel.getShortURL().toString(), ""); 
+				tweetText.replace(urlModel.getShortURL().toString(), ""); 
 		}
 		// Remove hashtags
 		Set<String> hashTags = aTweet.getHashtags();
@@ -41,7 +41,7 @@ public class BagOfWordsGenerator implements Extractor<Map<String, Integer>> {
 			for (String tag: hashTags)
 				tweetText.replace(tag, "");
 		}
-		
+
 		// TODO: I am not sure whether stemming is required 
 		// FIXME: Tokenizer -- This also cleans urls again overhead work 
 		String[] tokens = Tokenizer.tokenize(tweetText.toLowerCase()); 
@@ -51,16 +51,16 @@ public class BagOfWordsGenerator implements Extractor<Map<String, Integer>> {
 			else
 				termFrequency.put(tokens[i], 1);
 		}
-		
+
 		return termFrequency;
 	}
 
 	@Override
 	public void process(AnnotatedTweet tweet) {
 		tweet.setBagOfWords(this.extract(tweet));
-		
+
 	}
-	
+
 	/**
 	 * This function is specifically to merge the bag of words of a list of 
 	 * tweets and provide a single map of words with their frequencies.
@@ -69,24 +69,21 @@ public class BagOfWordsGenerator implements Extractor<Map<String, Integer>> {
 	 * @return
 	 */
 	public Map<String, Integer> extractListTweets(List<AnnotatedTweet> tweets){
-		Map<String, Integer> termfrequencyMap = new HashMap<String, Integer>();
-		
+		Map<String, Integer> termFrequencyMap = new HashMap<String, Integer>();
+
 		for(AnnotatedTweet tweet : tweets){
-			
+
 			Map<String, Integer> tempTermFreqMap = this.extract(tweet);
-			
+
 			for(String term : tempTermFreqMap.keySet()){
-				if(termfrequencyMap.containsKey(term)){
-					int newCount = termfrequencyMap.get(term) + tempTermFreqMap.get(term);
-					termfrequencyMap.put(term, newCount);
+				if(termFrequencyMap.containsKey(term)){
+					int newCount = termFrequencyMap.get(term) + tempTermFreqMap.get(term);
+					termFrequencyMap.put(term, newCount);
 				}else
-					termfrequencyMap.put(term, 1);
+					termFrequencyMap.put(term, 1);
 			}			
-			
-			// TODO:Have to see whether putAll works ar not.
-			//termfrequencyMap.putAll(this.extract(tweet));
 		}
-		return termfrequencyMap;
+		return termFrequencyMap;
 	}
 
 }
