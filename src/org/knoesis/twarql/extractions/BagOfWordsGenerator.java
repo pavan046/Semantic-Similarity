@@ -60,15 +60,33 @@ public class BagOfWordsGenerator implements Extractor<Map<String, Integer>> {
 		tweet.setBagOfWords(this.extract(tweet));
 		
 	}
+	
 	/**
-	 * FIXME: This function is specifically to merge the bag of words of a list of 
+	 * This function is specifically to merge the bag of words of a list of 
 	 * tweets and provide a single map of words with their frequencies.
 	 * 
 	 * @param tweets
 	 * @return
 	 */
 	public Map<String, Integer> extractListTweets(List<AnnotatedTweet> tweets){
-		return null;
+		Map<String, Integer> termfrequencyMap = new HashMap<String, Integer>();
+		
+		for(AnnotatedTweet tweet : tweets){
+			
+			Map<String, Integer> tempTermFreqMap = this.extract(tweet);
+			
+			for(String term : tempTermFreqMap.keySet()){
+				if(termfrequencyMap.containsKey(term)){
+					int newCount = termfrequencyMap.get(term) + tempTermFreqMap.get(term);
+					termfrequencyMap.put(term, newCount);
+				}else
+					termfrequencyMap.put(term, 1);
+			}			
+			
+			// TODO:Have to see whether putAll works ar not.
+			//termfrequencyMap.putAll(this.extract(tweet));
+		}
+		return termfrequencyMap;
 	}
 
 }
