@@ -60,7 +60,7 @@ public class SearchTwitter {
 			if (result.getTweets().isEmpty())
 				break;
 			else
-				tweets.addAll(processor.process(TweetFactory.Tweet2AnnotatedTweet(result.getTweets())));
+				tweets.addAll(processor.process(TweetFactory.Tweet2AnnotatedTweet(result.getTweets(), tag)));
 		}
 		System.out.println(tweets);
 	}

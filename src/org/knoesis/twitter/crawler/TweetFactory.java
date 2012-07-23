@@ -44,10 +44,21 @@ public class TweetFactory {
 		return t;
 	}
 	
-	public static List<AnnotatedTweet> Tweet2AnnotatedTweet(List<Tweet> list) {
+	public static AnnotatedTweet Tweet2AnnotatedTweet(Tweet st, String searchKeyword) {
+		AnnotatedTweet t = new AnnotatedTweet(st, searchKeyword);
+		return t;
+	}
+	// TODO: Logic changed custom to put tweets just which matches the keyword and 
+	// 		 does not put tweets which has keyword equivalent hashtags.
+	// 		Functionality to differentiate between hashtag search and keyword search
+	public static List<AnnotatedTweet> Tweet2AnnotatedTweet(List<Tweet> list, String searchKeyword) {
 		List<AnnotatedTweet> converted = new ArrayList<AnnotatedTweet>();
 		for (Tweet t: list) {
-			converted.add(Tweet2AnnotatedTweet(t));
+			AnnotatedTweet aT = Tweet2AnnotatedTweet(t, searchKeyword);
+			if(searchKeyword.startsWith("#"))
+				converted.add(aT);
+			else if(!aT.isContainsHashtagEquivalentToKeyword())
+				converted.add(aT);
 		}
 		return converted;
 	}

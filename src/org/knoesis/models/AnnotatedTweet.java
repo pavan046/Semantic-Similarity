@@ -34,6 +34,16 @@ public class AnnotatedTweet implements Serializable{
 	private Set<Triple> triples = new HashSet<Triple>();
 	private Set<URLModel> urlModels = new HashSet<URLModel>();
 	private Map<String, Integer> bagOfWords = new HashMap<String, Integer>();
+	
+	/*
+	 *  The following two variables will be set while detecting the hashtags and
+	 *  is specific to this project.
+	 *  
+	 *  Provides functionality to differentiate between hashtag and keyword search
+	 */
+	private String searchKeyword;
+	private boolean containsHashtagEquivalentToKeyword = false;
+	
 
 	
 	
@@ -44,6 +54,21 @@ public class AnnotatedTweet implements Serializable{
 	//TODO Move this to factory
 	public AnnotatedTweet(Status tweet) {
 		this.setStatusTweet(tweet);
+	}
+	/**
+	 * This contructor is specifically for this Semantic Similarity Project.
+	 * Sets the tweet and checks whether the searchKeyword is actually present in 
+	 * the tweet or is in the form of a hashtag. Provides functionality to differentiate 
+	 * between hashtag and keyword search.
+	 * 
+	 * @param st
+	 * @param keyword
+	 */
+	public AnnotatedTweet(Tweet st, String searchKeyword){
+		this.setTwitter4jTweet(st);
+		this.searchKeyword = searchKeyword;
+		if(this.twitter4jTweet.getText().toLowerCase().contains("#"+searchKeyword.toLowerCase()))
+			this.containsHashtagEquivalentToKeyword = true;
 	}
 
 	/*
@@ -143,6 +168,15 @@ public class AnnotatedTweet implements Serializable{
 
 	public void setUrlModels(Set<URLModel> urlModels) {
 		this.urlModels = urlModels;
+	}
+
+	public boolean isContainsHashtagEquivalentToKeyword() {
+		return containsHashtagEquivalentToKeyword;
+	}
+
+	public void setContainsHashtagEquivalentToKeyword(
+			boolean containsHashtagEquivalentToKeyword) {
+		this.containsHashtagEquivalentToKeyword = containsHashtagEquivalentToKeyword;
 	}
 
 	
