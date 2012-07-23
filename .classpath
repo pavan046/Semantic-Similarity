@@ -22,9 +22,8 @@
 	<classpathentry kind="lib" path="lib/xercesImpl-2.10.0.jar"/>
 	<classpathentry kind="lib" path="lib/xml-apis-1.4.01.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="/Users/pavan/Documents/work/workspace/Twarql/Semantic-Similarity/lib/lucene-core-3.6.0.jar"/>
-	<classpathentry kind="lib" path="/Users/pavan/Documents/work/workspace/Twarql/Semantic-Similarity/lib/lucene-test-framework-3.6.0.jar"/>
 	<classpathentry kind="lib" path="/Users/pavan/Documents/work/workspace/Twarql/Semantic-Similarity/lib/tweetstream4j.jar"/>
 	<classpathentry kind="lib" path="/Users/pavan/Documents/work/workspace/Twarql/Semantic-Similarity/lib/twitter4j-core-2.1.7-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="/Users/pavan/Documents/work/workspace/Twarql/Semantic-Similarity/lib/lucene-core-3.6.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

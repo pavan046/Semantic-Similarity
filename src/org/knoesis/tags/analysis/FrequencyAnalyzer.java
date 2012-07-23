@@ -1,6 +1,11 @@
 package org.knoesis.tags.analysis;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.knoesis.models.AnnotatedTweet;
 
 /**
  * This class analyzes the frequency of hashtags based on the below two attributes
@@ -18,41 +23,49 @@ import java.io.File;
  *		3. We also need to calculate the distribution in the number of users
  */
 public class FrequencyAnalyzer implements Analyzer{
-	private static int usersMentionHashtag = 0; 
-	private static int usersMentionKeyword = 0;
-	private static int messagesMentionHashtag = 0;
+	private static int distinctUsersMentionKeyword = 0; 
 	private static int messagesMentionKeyword = 0;
-	private File tweetJsonFile;
-	private String hashTag;
+	private static Map<String, Integer> twitterUsers = new HashMap<String, Integer>();
+	private List<AnnotatedTweet> tweets;
+	private String keyword;
 	
-	public FrequencyAnalyzer(File tweetJsonFile, String hashTag) {
-		this.tweetJsonFile = tweetJsonFile;
-		this.hashTag = hashTag;
+	public FrequencyAnalyzer(List<AnnotatedTweet> tweets, String keyword) {
+		this.tweets = tweets;
+		this.keyword = keyword;
 	}
 	@Override
 	public void analyze() {
-		String user = ""; 
-		String tweet = "";
-		//Process tweets from the tweetJsonFile; 
-		// Get tweets and the users
-		
-		countUsers(user, tweet);
-		countMessages(tweet);
+		countMessages();
+		countUsers();
 	}
+	
 	/**
 	 * This function counts the number of distict users mentioning the 
-	 * hashtag
+	 * hashtag and normalizes using the total number of messages fetched.
 	 */
-	public void countUsers(String userName, String tweet){
-		
+	private void countUsers(){
+		for(AnnotatedTweet tweet: tweets){
+			// if the user is present then add another post posted by the user
+			if(twitterUsers.keySet().contains(tweet.getTwitter4jTweet().getFromUser()))
+				twitterUsers.put(tweet.getTwitter4jTweet().getFromUser(), twitterUsers.get(tweet.getTwitter4jTweet().getFromUser())+1);
+			else
+				twitterUsers.put(tweet.getTwitter4jTweet().getFromUser(), 1);
+		}
+		distinctUsersMentionKeyword = twitterUsers.keySet().size()/messagesMentionKeyword;
 	}
+	
 	/**
 	 * This function counts the messages that mention the hashtag 
 	 * and the that mention just the keyword of the hashtag
 	 * 
+	 * TODO: Might be good to involve the retweets to get to know the number of 
+	 * 		 distinct tweets (RTs)
+	 * 
+	 * FIXME: Normalize this with the time period of the first to the last tweet
+	 * 
 	 */
-	public void countMessages(String tweet){
-		
+	public void countMessages(){
+		messagesMentionKeyword = tweets.size();
 	}
 
 }

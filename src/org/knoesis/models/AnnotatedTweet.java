@@ -32,6 +32,9 @@ public class AnnotatedTweet implements Serializable{
 	private Set<String> hashtags;
 	private Map<String,String> hashtagDef = new HashMap<String,String>();
 	private Set<Triple> triples = new HashSet<Triple>();
+	private Set<URLModel> urlModels = new HashSet<URLModel>();
+	private Map<String, Integer> bagOfWords = new HashMap<String, Integer>();
+
 	
 	
 	//TODO: Pavan: I am not sure whether this is required.. Yet to be debated
@@ -119,6 +122,27 @@ public class AnnotatedTweet implements Serializable{
 
 	public void setTwitter4jTweet(Tweet twitter4jTweet) {
 		this.twitter4jTweet = twitter4jTweet;
+	}
+
+	public void setUrls(Set<URLModel> urlModels) {
+		// TODO Auto-generated method stub
+		this.setUrlModels(urlModels);
+	}
+
+	public Map<String, Integer> getBagOfWords() {
+		return bagOfWords;
+	}
+
+	public void setBagOfWords(Map<String, Integer> bagOfWords) {
+		this.bagOfWords = bagOfWords;
+	}
+
+	public Set<URLModel> getUrlModels() {
+		return urlModels;
+	}
+
+	public void setUrlModels(Set<URLModel> urlModels) {
+		this.urlModels = urlModels;
 	}
 
 	
