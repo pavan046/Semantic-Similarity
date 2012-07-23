@@ -69,7 +69,7 @@ public class SearchTwitter {
 		List<Extractor> extractors = new ArrayList<Extractor>();
 		extractors.add(new TagExtractor());
 		SearchTwitter searchTwitter = new SearchTwitter(extractors);
-		searchTwitter.getTweets("#obama");
+		searchTwitter.getTweets("obama");
 	}
 
 }

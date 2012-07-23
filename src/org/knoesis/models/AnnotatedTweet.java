@@ -87,7 +87,7 @@ public class AnnotatedTweet implements Serializable{
 	
 	@Override
 	public String toString() {
-		return "TWEET " +
+		return "\nTWEET " + getTwitter4jTweet().getText() +
 		        "\n\tentities: "+getEntities()+
 		        "\n\thashtags: "+getHashtags();
 	}
