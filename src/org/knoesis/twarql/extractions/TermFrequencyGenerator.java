@@ -22,7 +22,7 @@ import org.knoesis.utils.Tokenizer;
  * @author pavan
  *
  */
-public class BagOfWordsGenerator implements Extractor<Map<String, Integer>> {
+public class TermFrequencyGenerator implements Extractor<Map<String, Integer>> {
 
 	@Override
 	public Map<String, Integer> extract(Object tweet) {
