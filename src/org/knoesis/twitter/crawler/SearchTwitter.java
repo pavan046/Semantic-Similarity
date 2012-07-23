@@ -30,6 +30,7 @@ public class SearchTwitter {
 	/*Defining required classes for init()*/
 	private Twitter twitter = null;
 	private static TweetProcessor processor = null;
+	private List<AnnotatedTweet> annotatedTweets = null;
 
 	public SearchTwitter(List<Extractor> extractors) {
 		processor = new TweetProcessor(extractors);
@@ -40,9 +41,10 @@ public class SearchTwitter {
 	 * 
 	 * TODO: For now the list of extractors are just TagExtractor.
 	 * 
+	 * Pramod -- Changed this method to return the list of Annotated Tweets.
 	 * @param tag
 	 */
-	private void getTweets(String tag, boolean isHashTag) {
+	public List<AnnotatedTweet> getTweets(String tag, boolean isHashTag) {
 		Twitter twitter = new TwitterFactory().getInstance("streamingpavan", "Knoesis2009");
 		Query query = new Query(tag); 	// Query for the search
 		query.setRpp(100);	//default is 15 tweets/search which is set to 100
@@ -62,7 +64,11 @@ public class SearchTwitter {
 			else
 				tweets.addAll(processor.process(TweetFactory.Tweet2AnnotatedTweet(result.getTweets(), tag, isHashTag)));
 		}
-		System.out.println(tweets);
+		
+		//System.out.println(tweets);
+		System.out.println(tweets.size());
+		return tweets;
+
 	}
 	
 	public static void main(String[] args) {
