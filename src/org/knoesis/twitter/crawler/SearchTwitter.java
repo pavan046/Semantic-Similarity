@@ -42,7 +42,7 @@ public class SearchTwitter {
 	 * 
 	 * @param tag
 	 */
-	private void getTweets(String tag) {
+	private void getTweets(String tag, boolean isHashTag) {
 		Twitter twitter = new TwitterFactory().getInstance("streamingpavan", "Knoesis2009");
 		Query query = new Query(tag); 	// Query for the search
 		query.setRpp(100);	//default is 15 tweets/search which is set to 100
@@ -60,7 +60,7 @@ public class SearchTwitter {
 			if (result.getTweets().isEmpty())
 				break;
 			else
-				tweets.addAll(processor.process(TweetFactory.Tweet2AnnotatedTweet(result.getTweets(), tag)));
+				tweets.addAll(processor.process(TweetFactory.Tweet2AnnotatedTweet(result.getTweets(), tag, isHashTag)));
 		}
 		System.out.println(tweets);
 	}
@@ -69,7 +69,7 @@ public class SearchTwitter {
 		List<Extractor> extractors = new ArrayList<Extractor>();
 		extractors.add(new TagExtractor());
 		SearchTwitter searchTwitter = new SearchTwitter(extractors);
-		searchTwitter.getTweets("obama");
+		searchTwitter.getTweets("obama", false);
 	}
 
 }
