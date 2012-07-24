@@ -46,6 +46,9 @@ public class TermFrequencyGenerator implements Extractor<Map<String, Integer>> {
 		// FIXME: Tokenizer -- This also cleans urls again overhead work 
 		String[] tokens = Tokenizer.tokenize(tweetText.toLowerCase()); 
 		for (int i=0; i<tokens.length; i++){
+			// If tokens are lesser than 3 chars then ignore
+			if (tokens[i].length()<3)
+				continue;
 			if (termFrequency.containsKey(tokens[i]))
 				termFrequency.put(tokens[i], termFrequency.get(tokens[i])+1);
 			else
