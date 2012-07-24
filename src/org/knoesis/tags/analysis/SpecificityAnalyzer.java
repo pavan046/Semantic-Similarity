@@ -33,7 +33,12 @@ public class SpecificityAnalyzer implements Analyzer {
 	
 	private Map<String, Integer> termFreqForTweetsOfHashtag = null;
 	private Map<String, Integer> termFreqForTweetsOfKeyword = null;
-	
+	/**
+	 * Two sets of Annotated tweets to find the cosine similarity and therefore 
+	 * finding the deviation in the way users use the word to that of the hashtag
+	 * @param tweetsOfHashtag
+	 * @param tweetsOfKeyword
+	 */
 	public SpecificityAnalyzer(List<AnnotatedTweet> tweetsOfHashtag, List<AnnotatedTweet> tweetsOfKeyword) {
 		this.tweetsOfHashtag = tweetsOfHashtag;
 		this.tweetsOfKeyword = tweetsOfKeyword;
@@ -47,10 +52,6 @@ public class SpecificityAnalyzer implements Analyzer {
 		specificityMeasure =  CosineSimilarityCalculator.calculate(termFreqForTweetsOfHashtag, termFreqForTweetsOfKeyword);				
 	}
 
-	public void setSpecificityMeasure(double specificityMeasure) {
-		this.specificityMeasure = specificityMeasure;
-	}
-
 	public double getSpecificityMeasure() {
 		return specificityMeasure;
 	}
@@ -60,8 +61,8 @@ public class SpecificityAnalyzer implements Analyzer {
 		extractors.add(new TagExtractor());
 		SearchTwitter searchTwitter = new SearchTwitter(extractors);
 		// This will get the last 1500 annotated Tweets.
-		List<AnnotatedTweet> tweetsOfHashtag = searchTwitter.getTweets("#gop", true);
-		List<AnnotatedTweet> tweetsOfKeyword = searchTwitter.getTweets("gop", false);
+		List<AnnotatedTweet> tweetsOfHashtag = searchTwitter.getTweets("#obama", true);
+		List<AnnotatedTweet> tweetsOfKeyword = searchTwitter.getTweets("obama", false);
 		
 		SpecificityAnalyzer specificity = new SpecificityAnalyzer(tweetsOfHashtag, tweetsOfKeyword);
 		specificity.analyze();
