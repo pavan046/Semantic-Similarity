@@ -53,14 +53,14 @@ public class CosineSimilarityCalculator {
 			}				
 		}			
 		
-		System.out.println("The dot product is :" + dotProduct);
+		//System.out.println("The dot product is :" + dotProduct);
 		
 		// Getting the similarity value. i.e., dotProduct / |docOne| |docTwo|
 		double lengthOfDocOne = getLength(docOne);
 		double lengthOfDoctwo = getLength(docOne);
 		double productOfLengths = lengthOfDocOne * lengthOfDoctwo;
 		
-		System.out.println("The product of lengths is :" + productOfLengths);
+		//System.out.println("The product of lengths is :" + productOfLengths);
 		
 		similarityValue = dotProduct / productOfLengths;
 		
