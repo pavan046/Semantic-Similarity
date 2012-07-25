@@ -1,4 +1,7 @@
 package org.knoesis.tags.analysis;
+
+import java.util.Map;
+
 /**
  * The classes implementing this interface analyzes the hashtags 
  * either for consideration or for deletion from crawling. 
@@ -12,4 +15,6 @@ package org.knoesis.tags.analysis;
  */
 public interface Analyzer {
 	public void analyze();
+	
+	public Map<String,Double> getResults();
 }

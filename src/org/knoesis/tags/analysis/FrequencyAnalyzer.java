@@ -22,17 +22,19 @@ import org.knoesis.models.AnnotatedTweet;
  *		1. Number of tweets/Period of time -- Ideally 1500/number of secs or mins 
  *		2. Number of users -- Total number of users who have created the 1500 tweets 
  *		3. We also need to calculate the distribution in the number of users
+ *
  */
 public class FrequencyAnalyzer implements Analyzer{
-	private static int distinctUsersMentionKeyword = 0; 
+	private static double distinctUsersMentionKeyword = 0; 
 	private static int messagesMentionKeyword = 0;
-	private static long normalizedMessageCount = 0;
+	private static double normalizedMessageCount = 0;
 	private static Map<String, Integer> twitterUsers = new HashMap<String, Integer>();
 	private List<AnnotatedTweet> tweets;
 	private String keyword;
 	
 	public FrequencyAnalyzer(List<AnnotatedTweet> tweets, String keyword) {
 		this.tweets = tweets;
+		// FIXME: pramod -- Didn't get the use of this?
 		this.keyword = keyword;
 	}
 	@Override
@@ -46,6 +48,7 @@ public class FrequencyAnalyzer implements Analyzer{
 	 * hashtag and normalizes using the total number of messages fetched.
 	 */
 	private void countUsers(){
+		long noOfTweets = tweets.size();
 		for(AnnotatedTweet tweet: tweets){
 			// if the user is present then add another post posted by the user
 			if(twitterUsers.keySet().contains(tweet.getTwitter4jTweet().getFromUser()))
@@ -53,7 +56,8 @@ public class FrequencyAnalyzer implements Analyzer{
 			else
 				twitterUsers.put(tweet.getTwitter4jTweet().getFromUser(), 1);
 		}
-		distinctUsersMentionKeyword = twitterUsers.keySet().size()/messagesMentionKeyword;
+		distinctUsersMentionKeyword = (double)twitterUsers.keySet().size()/noOfTweets;
+		
 	}
 	
 	/**
@@ -64,23 +68,39 @@ public class FrequencyAnalyzer implements Analyzer{
 	 * TODO: Might be good to involve the retweets to get to know the number of 
 	 * 		 distinct tweets (RTs)
 	 * 
-	 * 
-	 * 
+	 * TODO: pramod -- Are we doing exactly what it is said above?
 	 */
 	public void countMessages(){
-		int lastTweetNumber = tweets.size();
-		//messagesMentionKeyword = tweets.size();
+		int noOfTweets = tweets.size();
 		
 		// Getting the start and end date of given set of tweets. Assuming they are sorted.
 		Date startDate = tweets.get(0).getTwitter4jTweet().getCreatedAt();
-		Date endDate = tweets.get(lastTweetNumber).getTwitter4jTweet().getCreatedAt();
-		
-		long timeDiffinMilliSecs = endDate.getTime() - startDate.getTime();
+		Date endDate = tweets.get(noOfTweets-1).getTwitter4jTweet().getCreatedAt();
+		long timeDiffinMilliSecs = startDate.getTime() - endDate.getTime();
 		
 		long timeDiffinMins = timeDiffinMilliSecs/(1000*60);
+		setNormalizedMessageCount((double)noOfTweets/timeDiffinMins);
 		
-		normalizedMessageCount = lastTweetNumber/timeDiffinMins;
+//		System.out.println("The startdate is: " + startDate.toString());
+//		System.out.println("The enddate is: " + endDate.toString());
 
+	}
+	
+	public Map<String, Double> getResults() {
+		Map<String, Double> resultsMap = new HashMap<String, Double>();
+		resultsMap.put("nMessageCount", getNormalizedMessageCount());
+		resultsMap.put("nUserCount", distinctUsersMentionKeyword);
+		return resultsMap;
+	}
+	
+	/*
+	 * Accessor methods
+	 */
+	public static void setNormalizedMessageCount(double normalizedMessageCount) {
+		FrequencyAnalyzer.normalizedMessageCount = normalizedMessageCount;
+	}
+	public static double getNormalizedMessageCount() {
+		return normalizedMessageCount;
 	}
 
 }

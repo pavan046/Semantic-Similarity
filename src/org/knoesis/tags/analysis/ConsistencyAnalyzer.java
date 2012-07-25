@@ -1,5 +1,6 @@
 package org.knoesis.tags.analysis;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.knoesis.similarity.EntropyCalculator;
@@ -30,6 +31,12 @@ public class ConsistencyAnalyzer implements Analyzer{
 	@Override
 	public void analyze() {
 		entropyOfHashtag = entropyCalculator.calculate();
+	}
+	
+	public Map<String, Double> getResults() {
+		Map<String, Double> resultsMap = new HashMap<String, Double>();
+		resultsMap.put("Entropy", entropyOfHashtag);
+		return resultsMap;
 	}
 
 }

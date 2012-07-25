@@ -1,6 +1,7 @@
 package org.knoesis.tags.analysis;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -49,11 +50,13 @@ public class SpecificityAnalyzer implements Analyzer {
 	public void analyze() {
 		termFreqForTweetsOfHashtag = termFreqGenerator.extractListTweets(tweetsOfHashtag);
 		termFreqForTweetsOfKeyword = termFreqGenerator.extractListTweets(tweetsOfKeyword);		
-		specificityMeasure =  CosineSimilarityCalculator.calculate(termFreqForTweetsOfHashtag, termFreqForTweetsOfKeyword);				
+		specificityMeasure =  CosineSimilarityCalculator.calculate(termFreqForTweetsOfHashtag, termFreqForTweetsOfKeyword);
 	}
 
-	public double getSpecificityMeasure() {
-		return specificityMeasure;
+	public Map<String,Double> getResults() {
+		Map<String, Double> resultsMap = new HashMap<String, Double>();
+		resultsMap.put("Specificity", specificityMeasure);
+		return resultsMap;
 	}
 
 	public static void main(String[] args) {
@@ -66,6 +69,5 @@ public class SpecificityAnalyzer implements Analyzer {
 		
 		SpecificityAnalyzer specificity = new SpecificityAnalyzer(tweetsOfHashtag, tweetsOfKeyword);
 		specificity.analyze();
-		System.out.println("The specificity Measure is :" + specificity.getSpecificityMeasure());
 	}
 }
