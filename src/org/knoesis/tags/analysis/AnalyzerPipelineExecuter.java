@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import org.knoesis.models.AnnotatedTweet;
+import org.knoesis.models.HashTagAnalytics;
 import org.knoesis.twarql.extractions.Extractor;
 import org.knoesis.twarql.extractions.TagExtractor;
 import org.knoesis.twarql.extractions.TermFrequencyGenerator;
@@ -24,10 +25,10 @@ import org.knoesis.twitter.crawler.SearchTwitter;
  * @author pramod
  */
 public class AnalyzerPipelineExecuter {
-	
+
 	List<Analyzer> analyzers = new ArrayList<Analyzer>();
 	private Map<String, Double> resultsMap = new HashMap<String, Double>();
-	
+
 	/**
 	 * This constructor takes in the list of analyzers like frequency,specificity etc
 	 * @param analyzers
@@ -35,53 +36,55 @@ public class AnalyzerPipelineExecuter {
 	public AnalyzerPipelineExecuter(List<Analyzer> analyzers){
 		this.analyzers = analyzers;
 	}
-	
+
 	/**
-	 * This method does the processing. Gets the results from the getResults method of every analyzer
-	 * and stores it into a map.
-	 * @return resultsMap
+	 * Transforms the Hashtags to the model HashTagAnalytics and returns 
+	 * a list of HashTagAnalytics as a response
+	 * @return resultsHashTags
 	 */
-	public Map<String,Double> process(){
+	public List<HashTagAnalytics> process(List<String> hashTags){
 		//Map<String, Double> resultsMap = new HashMap<String, Double>();
-		for(Analyzer analyzer : analyzers){
-			analyzer.analyze();
-			resultsMap.putAll(analyzer.getResults());
-		}		
-		return resultsMap;
+		List<HashTagAnalytics> hashTagsAnalytics = new ArrayList<HashTagAnalytics>();
+		for (String tag: hashTags){
+			HashTagAnalytics hashTag = new HashTagAnalytics(tag);
+			for(Analyzer analyzer : analyzers){
+				analyzer.analyze(hashTag);
+			}
+			hashTagsAnalytics.add(hashTag);
+		}
+		return hashTagsAnalytics;
 	}
-	
+
 	public Map<String, Double> getResultsMap(){
 		return resultsMap;
 	}
-	
+
 	/**
 	 * For now to print the results just added print statements in every method. 
 	 * Should do it in a better way
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		List<Extractor> extractors = new ArrayList<Extractor>();
-		extractors.add(new TagExtractor());
-		SearchTwitter searchTwitter = new SearchTwitter(extractors);
-		// This will get the last 1500 annotated Tweets.
-		List<AnnotatedTweet> tweetsOfHashtag = searchTwitter.getTweets("#obama", true);
-		List<AnnotatedTweet> tweetsOfKeyword = searchTwitter.getTweets("obama", false);
 		
+
 		List<Analyzer> analyzers = new ArrayList<Analyzer>();
 		// Adding specificity Analyzer
-		analyzers.add(new SpecificityAnalyzer(tweetsOfHashtag, tweetsOfKeyword));
+		analyzers.add(new SpecificityAnalyzer());
 		// Adding consistency analyzer
 		TermFrequencyGenerator termFrequncy = new TermFrequencyGenerator();
-		analyzers.add(new ConsistencyAnalyzer(termFrequncy.extractListTweets(tweetsOfHashtag)));
+		analyzers.add(new ConsistencyAnalyzer());
 		// Adding Frequency Analyzer
-		analyzers.add(new FrequencyAnalyzer(tweetsOfHashtag, "null"));
-		
+		analyzers.add(new FrequencyAnalyzer());
+
 		// Calling the pipeline to process.
 		AnalyzerPipelineExecuter pipeline = new AnalyzerPipelineExecuter(analyzers);
-		pipeline.process();
-		System.out.println(pipeline.getResultsMap());
+		List<String> tags= new ArrayList<String>();
+		tags.add("#obama");
+		List<HashTagAnalytics> tagAnalytics = pipeline.process(tags);
+		for(HashTagAnalytics tag: tagAnalytics)
+			System.out.println(tag);
 	}
-	
-	
-	
+
+
+
 }

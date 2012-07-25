@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.knoesis.models.AnnotatedTweet;
+import org.knoesis.models.HashTagAnalytics;
 
 /**
  * This class analyzes the frequency of hashtags based on the below two attributes
@@ -25,30 +26,26 @@ import org.knoesis.models.AnnotatedTweet;
  *
  */
 public class FrequencyAnalyzer implements Analyzer{
-	private static double distinctUsersMentionKeyword = 0; 
-	private static int messagesMentionKeyword = 0;
+	private static int distinctUsers = 0; 
 	private static double normalizedMessageCount = 0;
 	private static Map<String, Integer> twitterUsers = new HashMap<String, Integer>();
-	private List<AnnotatedTweet> tweets;
-	private String keyword;
 	
-	public FrequencyAnalyzer(List<AnnotatedTweet> tweets, String keyword) {
-		this.tweets = tweets;
-		// FIXME: pramod -- Didn't get the use of this?
-		this.keyword = keyword;
-	}
 	@Override
-	public void analyze() {
-		countMessages();
-		countUsers();
+	public void analyze(HashTagAnalytics hashTag) {
+		countMessages(hashTag.getaTweetsOfHashTag());
+		countUsers(hashTag.getaTweetsOfHashTag());
+		//  TODO: Also setting the user set might be interesting to see how many users have majorly contributed
+		hashTag.setFrequencyMeasure(normalizedMessageCount);
+		hashTag.setDistinctUsersMentionHashTag(distinctUsers);
 	}
 	
 	/**
 	 * This function counts the number of distict users mentioning the 
 	 * hashtag and normalizes using the total number of messages fetched.
+	 * 
+	 * @param List<AnnotatedTweet> tweets
 	 */
-	private void countUsers(){
-		long noOfTweets = tweets.size();
+	private void countUsers(List<AnnotatedTweet> tweets){
 		for(AnnotatedTweet tweet: tweets){
 			// if the user is present then add another post posted by the user
 			if(twitterUsers.keySet().contains(tweet.getTwitter4jTweet().getFromUser()))
@@ -56,7 +53,7 @@ public class FrequencyAnalyzer implements Analyzer{
 			else
 				twitterUsers.put(tweet.getTwitter4jTweet().getFromUser(), 1);
 		}
-		distinctUsersMentionKeyword = (double)twitterUsers.keySet().size()/noOfTweets;
+		distinctUsers = twitterUsers.keySet().size();
 		
 	}
 	
@@ -65,12 +62,13 @@ public class FrequencyAnalyzer implements Analyzer{
 	 * and the that mention just the keyword of the hashtag. And
 	 * normalize this with the time period of the first to the last tweet
 	 * 
+	 * @param List<AnnotatedTweet> tweets
 	 * TODO: Might be good to involve the retweets to get to know the number of 
 	 * 		 distinct tweets (RTs)
 	 * 
 	 * TODO: pramod -- Are we doing exactly what it is said above?
 	 */
-	public void countMessages(){
+	public void countMessages(List<AnnotatedTweet> tweets){
 		int noOfTweets = tweets.size();
 		
 		// Getting the start and end date of given set of tweets. Assuming they are sorted.
@@ -80,18 +78,8 @@ public class FrequencyAnalyzer implements Analyzer{
 		
 		long timeDiffinMins = timeDiffinMilliSecs/(1000*60);
 		setNormalizedMessageCount((double)noOfTweets/timeDiffinMins);
-		
-//		System.out.println("The startdate is: " + startDate.toString());
-//		System.out.println("The enddate is: " + endDate.toString());
-
 	}
 	
-	public Map<String, Double> getResults() {
-		Map<String, Double> resultsMap = new HashMap<String, Double>();
-		resultsMap.put("nMessageCount", getNormalizedMessageCount());
-		resultsMap.put("nUserCount", distinctUsersMentionKeyword);
-		return resultsMap;
-	}
 	
 	/*
 	 * Accessor methods

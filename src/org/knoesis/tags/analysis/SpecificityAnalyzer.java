@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.knoesis.models.AnnotatedTweet;
+import org.knoesis.models.HashTagAnalytics;
 import org.knoesis.similarity.CosineSimilarityCalculator;
 import org.knoesis.twarql.extractions.Extractor;
 import org.knoesis.twarql.extractions.TagExtractor;
@@ -34,40 +35,17 @@ public class SpecificityAnalyzer implements Analyzer {
 	
 	private Map<String, Integer> termFreqForTweetsOfHashtag = null;
 	private Map<String, Integer> termFreqForTweetsOfKeyword = null;
-	/**
-	 * Two sets of Annotated tweets to find the cosine similarity and therefore 
-	 * finding the deviation in the way users use the word to that of the hashtag
-	 * @param tweetsOfHashtag
-	 * @param tweetsOfKeyword
-	 */
-	public SpecificityAnalyzer(List<AnnotatedTweet> tweetsOfHashtag, List<AnnotatedTweet> tweetsOfKeyword) {
-		this.tweetsOfHashtag = tweetsOfHashtag;
-		this.tweetsOfKeyword = tweetsOfKeyword;
-		termFreqGenerator = new TermFrequencyGenerator();
-	}
 	
 	@Override
-	public void analyze() {
-		termFreqForTweetsOfHashtag = termFreqGenerator.extractListTweets(tweetsOfHashtag);
-		termFreqForTweetsOfKeyword = termFreqGenerator.extractListTweets(tweetsOfKeyword);		
-		specificityMeasure =  CosineSimilarityCalculator.calculate(termFreqForTweetsOfHashtag, termFreqForTweetsOfKeyword);
-	}
-
-	public Map<String,Double> getResults() {
-		Map<String, Double> resultsMap = new HashMap<String, Double>();
-		resultsMap.put("Specificity", specificityMeasure);
-		return resultsMap;
+	public void analyze(HashTagAnalytics hashTag) {
+		hashTag.setSpecificityMeasure(CosineSimilarityCalculator.calculate(hashTag.getTermFrequencyOfHashTag(), hashTag.getTermFrequencyOfKeyword()));
 	}
 
 	public static void main(String[] args) {
 		List<Extractor> extractors = new ArrayList<Extractor>();
 		extractors.add(new TagExtractor());
-		SearchTwitter searchTwitter = new SearchTwitter(extractors);
-		// This will get the last 1500 annotated Tweets.
-		List<AnnotatedTweet> tweetsOfHashtag = searchTwitter.getTweets("#obama", true);
-		List<AnnotatedTweet> tweetsOfKeyword = searchTwitter.getTweets("obama", false);
-		
-		SpecificityAnalyzer specificity = new SpecificityAnalyzer(tweetsOfHashtag, tweetsOfKeyword);
-		specificity.analyze();
+		HashTagAnalytics hashTag = new HashTagAnalytics("#obama");
+		SpecificityAnalyzer specificity = new SpecificityAnalyzer();
+		specificity.analyze(hashTag);
 	}
 }

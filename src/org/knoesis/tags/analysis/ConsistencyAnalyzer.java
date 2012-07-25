@@ -3,6 +3,7 @@ package org.knoesis.tags.analysis;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.knoesis.models.HashTagAnalytics;
 import org.knoesis.similarity.EntropyCalculator;
 
 /**
@@ -20,23 +21,13 @@ import org.knoesis.similarity.EntropyCalculator;
  *
  */
 public class ConsistencyAnalyzer implements Analyzer{
-	private Map<String, Integer> termFrequency;
 	private EntropyCalculator entropyCalculator;
 	double entropyOfHashtag;
 	
-	public ConsistencyAnalyzer(Map<String, Integer> termFrequency) {
-		this.termFrequency = termFrequency;
-		this.entropyCalculator = new EntropyCalculator(termFrequency);
-	}
 	@Override
-	public void analyze() {
-		entropyOfHashtag = entropyCalculator.calculate();
+	public void analyze(HashTagAnalytics hashTag) {
+		entropyCalculator = new EntropyCalculator(hashTag.getTermFrequencyOfHashTag());
+		hashTag.setConsistencyMeaure(entropyCalculator.calculate());
 	}
 	
-	public Map<String, Double> getResults() {
-		Map<String, Double> resultsMap = new HashMap<String, Double>();
-		resultsMap.put("Entropy", entropyOfHashtag);
-		return resultsMap;
-	}
-
 }
