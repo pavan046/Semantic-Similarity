@@ -5,7 +5,9 @@ package org.knoesis.twitter.crawler;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.json.JSONException;
 import org.knoesis.models.AnnotatedTweet;
@@ -75,7 +77,17 @@ public class SearchTwitter {
 		List<Extractor> extractors = new ArrayList<Extractor>();
 		extractors.add(new TagExtractor());
 		SearchTwitter searchTwitter = new SearchTwitter(extractors);
-		searchTwitter.getTweets("obama", false);
+		List<AnnotatedTweet> aTweets = searchTwitter.getTweets("#election2012", false);
+		Map<String, Integer> tags = new HashMap<String, Integer>();
+		for(AnnotatedTweet aTweet: aTweets){
+			for(String tag: aTweet.getHashtags()){
+				if(tags.keySet().contains(tag.toLowerCase()))
+					tags.put(tag.toLowerCase(), tags.get(tag.toLowerCase())+1);
+				else
+					tags.put(tag.toLowerCase(), 1);
+			}
+		}
+		System.out.println(tags);
 	}
 
 }
