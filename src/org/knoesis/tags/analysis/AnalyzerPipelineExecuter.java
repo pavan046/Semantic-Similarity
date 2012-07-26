@@ -46,13 +46,16 @@ public class AnalyzerPipelineExecuter {
 		//Map<String, Double> resultsMap = new HashMap<String, Double>();
 		List<HashTagAnalytics> hashTagsAnalytics = new ArrayList<HashTagAnalytics>();
 		for (String tag: hashTags){
-			HashTagAnalytics hashTag = new HashTagAnalytics(tag);
-			for(Analyzer analyzer : analyzers){
-				analyzer.analyze(hashTag);
-			}
-			hashTagsAnalytics.add(hashTag);
+			hashTagsAnalytics.add(process(tag));
 		}
 		return hashTagsAnalytics;
+	}
+	
+	public HashTagAnalytics process(String hashTag){
+		HashTagAnalytics hashTagAnalytics = new HashTagAnalytics(hashTag);
+		for (Analyzer analyzer: analyzers)
+			analyzer.analyze(hashTagAnalytics);
+		return hashTagAnalytics;
 	}
 
 	public Map<String, Double> getResultsMap(){
@@ -71,18 +74,14 @@ public class AnalyzerPipelineExecuter {
 		// Adding specificity Analyzer
 		analyzers.add(new SpecificityAnalyzer());
 		// Adding consistency analyzer
-		TermFrequencyGenerator termFrequncy = new TermFrequencyGenerator();
 		analyzers.add(new ConsistencyAnalyzer());
 		// Adding Frequency Analyzer
 		analyzers.add(new FrequencyAnalyzer());
 
 		// Calling the pipeline to process.
 		AnalyzerPipelineExecuter pipeline = new AnalyzerPipelineExecuter(analyzers);
-		List<String> tags= new ArrayList<String>();
-		tags.add("#obama");
-		List<HashTagAnalytics> tagAnalytics = pipeline.process(tags);
-		for(HashTagAnalytics tag: tagAnalytics)
-			System.out.println(tag);
+		HashTagAnalytics tagAnalytics = pipeline.process("#obama");
+		System.out.println(tagAnalytics);
 	}
 
 

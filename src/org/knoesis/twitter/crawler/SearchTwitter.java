@@ -55,6 +55,8 @@ public class SearchTwitter {
 		for(int i=1; i<=15; i++){
 			query.setPage(i);
 			try {
+				System.out.println(query);
+				System.out.println(twitter.search(query));
 				result = twitter.search(query);
 			} catch (TwitterException e) {
 				// TODO Auto-generated catch block
