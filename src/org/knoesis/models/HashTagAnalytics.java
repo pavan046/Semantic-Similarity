@@ -31,8 +31,8 @@ public class HashTagAnalytics {
 	private double specificityMeasure;
 
 
-	private Map<String, Integer> termFrequencyOfHashTag;
-	private Map<String, Integer> termFrequencyOfKeyword;
+	private Map<String, Double> termFrequencyOfHashTag;
+	private Map<String, Double> termFrequencyOfKeyword;
 	private List<AnnotatedTweet> aTweetsOfHashTag;
 	private List<AnnotatedTweet> aTweetsOfKeyword;
 	private long timeOfAnalysis;
@@ -108,19 +108,19 @@ public class HashTagAnalytics {
 		this.specificityMeasure = specificityMeasure;
 	}
 
-	public Map<String, Integer> getTermFrequencyOfHashTag() {
+	public Map<String, Double> getTermFrequencyOfHashTag() {
 		return termFrequencyOfHashTag;
 	}
 
-	public void setTermFrequencyOfHashTag(Map<String, Integer> termFrequencyOfHashTag) {
+	public void setTermFrequencyOfHashTag(Map<String, Double> termFrequencyOfHashTag) {
 		this.termFrequencyOfHashTag = termFrequencyOfHashTag;
 	}
 
-	public Map<String, Integer> getTermFrequencyOfKeyword() {
+	public Map<String, Double> getTermFrequencyOfKeyword() {
 		return termFrequencyOfKeyword;
 	}
 
-	public void setTermFrequencyOfKeyword(Map<String, Integer> termFrequencyOfKeyword) {
+	public void setTermFrequencyOfKeyword(Map<String, Double> termFrequencyOfKeyword) {
 		this.termFrequencyOfKeyword = termFrequencyOfKeyword;
 	}
 

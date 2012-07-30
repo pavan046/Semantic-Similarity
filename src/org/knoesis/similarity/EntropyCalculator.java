@@ -19,10 +19,10 @@ import org.knoesis.twitter.crawler.SearchTwitter;
  *
  */
 public class EntropyCalculator {
-	private Map<String, Integer> termFrequency;
+	private Map<String, Double> termFrequency;
 	private int totalNumberOfterms;
 	
-	public EntropyCalculator(Map<String, Integer> termFrequency) {
+	public EntropyCalculator(Map<String, Double> termFrequency) {
 		this.termFrequency = termFrequency;
 		localSetTotalNumberOfTerms();
 	}
@@ -58,7 +58,7 @@ public class EntropyCalculator {
 		// This will get the last 1500 annotated Tweets.
 		List<AnnotatedTweet> tweetsOfHashtag = searchTwitter.getTweets("#tcot", true);
 		TermFrequencyGenerator termFrequencyGenerator = new TermFrequencyGenerator();
-		Map<String, Integer> termFrequency = termFrequencyGenerator.extractListTweets(tweetsOfHashtag);
+		Map<String, Double> termFrequency = termFrequencyGenerator.extractListTweets(tweetsOfHashtag);
 		System.out.println(termFrequency);
 		EntropyCalculator entropyCalculator = new EntropyCalculator(termFrequency);
 		System.out.println(entropyCalculator.calculate());

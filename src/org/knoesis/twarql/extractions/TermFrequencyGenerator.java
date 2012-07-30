@@ -71,8 +71,8 @@ public class TermFrequencyGenerator implements Extractor<Map<String, Integer>> {
 	 * @param tweets
 	 * @return
 	 */
-	public Map<String, Integer> extractListTweets(List<AnnotatedTweet> tweets){
-		Map<String, Integer> termFrequencyMap = new HashMap<String, Integer>();
+	public Map<String, Double> extractListTweets(List<AnnotatedTweet> tweets){
+		Map<String, Double> termFrequencyMap = new HashMap<String, Double>();
 
 		for(AnnotatedTweet tweet : tweets){
 
@@ -80,10 +80,10 @@ public class TermFrequencyGenerator implements Extractor<Map<String, Integer>> {
 
 			for(String term : tempTermFreqMap.keySet()){
 				if(termFrequencyMap.containsKey(term)){
-					int newCount = termFrequencyMap.get(term) + tempTermFreqMap.get(term);
+					double newCount = termFrequencyMap.get(term) + tempTermFreqMap.get(term);
 					termFrequencyMap.put(term, newCount);
 				}else
-					termFrequencyMap.put(term, 1);
+					termFrequencyMap.put(term, 1.0d);
 			}			
 		}
 		return termFrequencyMap;

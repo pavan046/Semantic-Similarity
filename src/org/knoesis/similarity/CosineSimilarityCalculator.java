@@ -2,6 +2,7 @@ package org.knoesis.similarity;
 
 import java.text.DecimalFormat;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -12,15 +13,13 @@ import java.util.Set;
  * Cosine Similarity(a,b) = dot(a) * dot(b)/|a| |b|
  * 
  * @author pavan
+ * 
+ * 
+ * FIXME: THis code has a pretty big BUG.. Need to check what is wrong and recode
+ * 		 I will do it tomorrow
  *
  */
 public class CosineSimilarityCalculator {
-	private static Map<String, Integer> docOne, docTwo;
-	
-	public CosineSimilarityCalculator(Map<String, Integer> docOne, Map<String, Integer> docTwo) {
-		this.setDocOne(docOne);
-		this.setDocTwo(docTwo);
-	}
 	
 	/**
 	 * This method takes in two documents and gives you the 
@@ -28,69 +27,17 @@ public class CosineSimilarityCalculator {
 	 * @param docTwo
 	 * @return
 	 */
-	public static double calculate(Map<String, Integer> docOne, Map<String, Integer> docTwo){
+	public static double calculate(Map<String, Double> v1, Map<String, Double> v2){
 		
-		double similarityValue = 0;
-		double dotProduct =0;
-		
-		// Converting all the terms into a set. so that we can use retainAll to get the intersection
-		// of two sets
-		Set<String> docOneTerms = docOne.keySet();
-		Set<String> docTwoTerms = docTwo.keySet();
-		docOneTerms.retainAll(docTwoTerms);
-		
-		Iterator<String> docOneIterator = docOneTerms.iterator();
-		
-		while(docOneIterator.hasNext()){
-			String term = docOneIterator.next();
-			double valueForTermInDocOne = docOne.get(term);
-			
-			// Checking if the second vector has some value associated with that term.
-			if(docTwo.get(term) != 0)
-			{
-				double valueForTermInDoctwo = docTwo.get(term);
-				dotProduct = dotProduct + (valueForTermInDocOne * valueForTermInDoctwo);
-			}				
-		}			
-		
-		//System.out.println("The dot product is :" + dotProduct);
-		
-		// Getting the similarity value. i.e., dotProduct / |docOne| |docTwo|
-		double lengthOfDocOne = getLength(docOne);
-		double lengthOfDoctwo = getLength(docOne);
-		double productOfLengths = lengthOfDocOne * lengthOfDoctwo;
-		
-		//System.out.println("The product of lengths is :" + productOfLengths);
-		
-		similarityValue = dotProduct / productOfLengths;
-		
-		return similarityValue;
+		 Set<String> both = new HashSet<String>(v1.keySet());
+         both.retainAll(v2.keySet());
+         double sclar = 0, norm1 = 0, norm2 = 0;
+         for (String k : both) sclar += v1.get(k) * v2.get(k);
+         for (String k : v1.keySet()) norm1 += v1.get(k) * v1.get(k);
+         for (String k : v2.keySet()) norm2 += v2.get(k) * v2.get(k);
+         return sclar / Math.sqrt(norm1 * norm2);		
 	}
-	
-	/**
-	 * This method gives you the length of document i.e., |document|
-	 * @param doc
-	 * @return
-	 */
-	public static double getLength(Map<String, Integer> doc){
-		double length = 0;
 		
-		Iterator<Integer> mapValuesIterator = doc.values().iterator();
-		while(mapValuesIterator.hasNext()){
-			double value = mapValuesIterator.next();
-			length = length + (value * value);
-		}
-		return Math.sqrt(length);
-	}
-
-	public static void setDocOne(Map<String, Integer> docOne) {
-		CosineSimilarityCalculator.docOne = docOne;
-	}
-
-	public static void setDocTwo(Map<String, Integer> docTwo) {
-		CosineSimilarityCalculator.docTwo = docTwo;
-	}
-	
 	public static void main(String[] args) {
 		Map<String, Integer> map1 = new HashMap<String, Integer>();
 		Map<String ,Integer> map2 = new HashMap<String, Integer>();
@@ -103,7 +50,6 @@ public class CosineSimilarityCalculator {
 		map2.put("is", 4);
 		map2.put("good1", 5);
 		
-		System.out.println(CosineSimilarityCalculator.calculate(map1, map2));
 		
 		
 	}
