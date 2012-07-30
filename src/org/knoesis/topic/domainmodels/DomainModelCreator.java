@@ -8,6 +8,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import org.knoesis.api.DBpediaPathGenerator;
 import org.knoesis.api.WikipediaParser;
@@ -58,7 +59,7 @@ public class DomainModelCreator {
 	public List<Triple> createModel() throws InterruptedException, IOException{
 		List<Triple> triples = new ArrayList<Triple>();
 		long count = 0;
-		List<String> links = parser.getLinks();
+		Set<String> links = parser.getLinks();
 		for(String link: links){
 			String conceptDbpedia = translateConcept(link);
 			System.out.println("Dbpedia concept is-------" + conceptDbpedia);

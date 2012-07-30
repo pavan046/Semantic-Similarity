@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import org.knoesis.api.WikipediaParser;
@@ -40,7 +41,7 @@ public class BiConceptRelatednessCalculator {
 
 	private int calculateRelatedness(String c1, String c2) {
 		parser.setWikipediaPage(c1);
-		List<String> firstLinks = parser.getLinks();
+		Set<String> firstLinks = parser.getLinks();
 		if(firstLinks.contains(c2)||firstLinks.contains("Template:"+c2))
 			return 2;
 
@@ -54,13 +55,13 @@ public class BiConceptRelatednessCalculator {
 
 	private int calculateRelatedness(String c1, String c2, Map<String, String> jsonMap) {
 		try{
-			List<String> firstLinks = parser.parseJson("prop", jsonMap.get(c1));
+			Set<String> firstLinks = parser.parseJson("prop", jsonMap.get(c1));
 			if(firstLinks.contains(c2)||firstLinks.contains("Template:"+c2))
 				return 2;
 
 			for(String link: firstLinks){
 				parser.setWikipediaPage(link);
-				List<String> secondLinks = parser.parseJson("prop", jsonMap.get(link));
+				Set<String> secondLinks = parser.parseJson("prop", jsonMap.get(link));
 				if(secondLinks.contains(c2) || secondLinks.contains("Template:"+c2))
 					return 1;
 			}
@@ -104,7 +105,7 @@ public class BiConceptRelatednessCalculator {
 			}
 			Map<String, String> temp = new HashMap<String, String>();
 			for(String link: map.keySet()){
-				List<String> secondLinks = WikipediaParser.parseJson("prop", map.get(link));
+				Set<String> secondLinks = WikipediaParser.parseJson("prop", map.get(link));
 				for(String secondLink: secondLinks){
 					System.out.println(link+":"+secondLink);
 					temp.put(secondLink, new WikipediaParser(secondLink).getLinksJson());

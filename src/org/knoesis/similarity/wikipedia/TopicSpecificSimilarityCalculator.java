@@ -7,6 +7,7 @@ import java.io.Writer;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.knoesis.api.DBpediaTypeGetter;
@@ -64,8 +65,8 @@ public class TopicSpecificSimilarityCalculator {
 	 * @return
 	 */
 	public Map<String, Double> calculate(){
-		List<String> firstLinks = parser.getLinks();
-		Map<String, List<String>> secondLinks = new HashMap<String, List<String>>();
+		Set<String> firstLinks = parser.getLinks();
+		Map<String, Set<String>> secondLinks = new HashMap<String, Set<String>>();
 
 		for(String link: firstLinks){
 			// FIXME: Find a better way to do this, as of now just replacing Templates 
@@ -91,10 +92,10 @@ public class TopicSpecificSimilarityCalculator {
 	 * @param secondLinks
 	 * @return
 	 */
-	private Map<String, Double> calculateWeights(List<String> firstLinks, Map<String, List<String>> secondLinks){
+	private Map<String, Double> calculateWeights(Set<String> firstLinks, Map<String, Set<String>> secondLinks){
 		Map<String, Double> results = new HashMap<String, Double>();
 		for(String secondLink: secondLinks.keySet()){
-			List<String> links = secondLinks.get(secondLink);
+			Set<String> links = secondLinks.get(secondLink);
 			// If there are no further links. Then return two since it is connected.
 			if(links==null){
 				// Comment this line if you need just the jaccard coefficient

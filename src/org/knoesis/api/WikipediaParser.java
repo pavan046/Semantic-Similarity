@@ -166,7 +166,7 @@ public class WikipediaParser {
 		
 	}
 
-	public List<String> getLinks(){
+	public Set<String> getLinks(){
 		initializeParams();
 		params.put("prop", "links");
 		//String json =conn.response(params);
@@ -180,7 +180,7 @@ public class WikipediaParser {
 	 * @param revisionID
 	 * @return
 	 */
-	public List<String> getRevisionIDLinks(String time){
+	public Set<String> getRevisionIDLinks(String time){
 		
 		String revisionID = getRevisionID(time);
 		params = new HashMap<String, String>();
@@ -198,9 +198,9 @@ public class WikipediaParser {
 	 * @param response
 	 * @return
 	 */
-	public static List<String> parseJson(String property, String response) {
+	public static Set<String> parseJson(String property, String response) {
 		//Not considering the properties as of now
-		List<String> links = new ArrayList<String>();
+		Set<String> links = new HashSet<String>();
 		try {
 			JSONObject jsonObj = new JSONObject(response);
 			JSONArray linksJson = jsonObj.getJSONObject("parse").getJSONArray("links");
@@ -245,18 +245,14 @@ public class WikipediaParser {
 	 * @param time (format yyyymmddhhMMss)
 	 * @return
 	 */
-	public List<String> getNewLinksAdded(String time){
-		List<String> currentLinks = getLinks();
-		List<String> linksFromPastPage = getRevisionIDLinks(time);
+	public Set<String> getNewLinksAdded(String time){
+		Set<String> currentLinks = getLinks();
+		Set<String> linksFromPastPage = getRevisionIDLinks(time);
 		
-		Set<String> currentLinksSet = new HashSet<String>(currentLinks);
-		Set<String> linksFromPastPageSet = new HashSet<String>(linksFromPastPage);
-		
-		currentLinksSet.removeAll(linksFromPastPageSet);
+		currentLinks.removeAll(linksFromPastPage);
 	
-		List<String> newLinks = new ArrayList<String>(currentLinksSet);
 		
-		return newLinks;
+		return currentLinks;
 	}
 	
 	/**
@@ -265,18 +261,13 @@ public class WikipediaParser {
 	 * @param time
 	 * @return
 	 */
-	public List<String> getLinksDeleted(String time){
-		List<String> currentLinks = getLinks();
-		List<String> linksFromPastPage = getRevisionIDLinks(time);
+	public Set<String> getLinksDeleted(String time){
+		Set<String> currentLinks = getLinks();
+		Set<String> linksFromPastPage = getRevisionIDLinks(time);
 		
-		Set<String> currentLinksSet = new HashSet<String>(currentLinks);
-		Set<String> linksFromPastPageSet = new HashSet<String>(linksFromPastPage);
-		
-		linksFromPastPageSet.removeAll(currentLinksSet);
+		linksFromPastPage.removeAll(currentLinks);
 	
-		List<String> deletedLinks = new ArrayList<String>(linksFromPastPageSet);
-		
-		return deletedLinks;
+		return linksFromPastPage;
 	}
 	
 	

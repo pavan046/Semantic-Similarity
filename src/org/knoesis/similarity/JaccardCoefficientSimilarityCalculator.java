@@ -15,11 +15,8 @@ import java.util.TreeSet;
  * 		 measures as an interface. 
  */
 public class JaccardCoefficientSimilarityCalculator {
-	private List<String> docOne, docTwo;
 	
-	public JaccardCoefficientSimilarityCalculator(List<String> docOne, List<String> docTwo) {
-		this.setDocOne(docOne);
-		this.setDocTwo(docTwo);
+	public JaccardCoefficientSimilarityCalculator() {
 	}
 	
 	/**
@@ -28,56 +25,25 @@ public class JaccardCoefficientSimilarityCalculator {
 	 * @param docTwo
 	 * @return
 	 */
-	public static double calculate(List<String> docOne, List<String> docTwo){
+	public static double calculate(Set<String> docOne, Set<String> docTwo){
 		
 		double jaccardCoeff = 0;
 		
-		Set<String> docOneSet = new HashSet<String>(docOne);
-		Set<String> docTwoSet = new HashSet<String>(docTwo);
+		Set<String> intersectionOfSets = new HashSet<String>(docOne);
+		intersectionOfSets.retainAll(docTwo);
 		
-		Set<String> intersectionOfSets = intersection(docOneSet, docTwoSet);
-		Set<String> unionOfSets = union(docOneSet, docTwoSet);
+		Set<String> unionOfSets = new HashSet<String>(docOne);
+		unionOfSets.addAll(docTwo);
 		
 		jaccardCoeff = (double)intersectionOfSets.size() / unionOfSets.size();
 		
 		return jaccardCoeff;
 	}
 	
-	/**
-	 * This method gives you the intersection of two sets
-	 * @param docOne
-	 * @param docTwo
-	 * @return
-	 */
-	public static Set<String> intersection(Set<String> set1,Set<String> set2){	
-		Set<String> tmp = new HashSet<String>(set1);
-		boolean flag = tmp.retainAll(set2);
-		return tmp;
-	}
-	
-	/**
-	 * This method gives you the union of two sets
-	 * @param docOne
-	 * @param docTwo
-	 * @return
-	 */
-	public static Set<String> union(Set<String> setA,Set<String> setB){
-		Set<String> tmp = new HashSet<String>(setA);
-		tmp.addAll(setB);
-		return tmp;
-	}
-
-	public void setDocOne(List<String> docOne) {
-		this.docOne = docOne;
-	}
-
-	public void setDocTwo(List<String> docTwo) {
-		this.docTwo = docTwo;
-	}
-	
+		
 	public static void main(String[] args) {
-		ArrayList<String> list1 = new ArrayList<String>();
-		ArrayList<String> list2 = new ArrayList<String>();
+		Set<String> list1 = new HashSet<String>();
+		Set<String> list2 = new HashSet<String>();
 		
 		list1.add("Pramod");
 		list1.add("koneru");
@@ -88,8 +54,7 @@ public class JaccardCoefficientSimilarityCalculator {
 		list2.add("asas");
 		list2.add("aaas");
 		
-		JaccardCoefficientSimilarityCalculator test = new JaccardCoefficientSimilarityCalculator(list1, list2);
-		System.out.println("The jaccard coeff is :" + test.calculate(list1, list2));
+		System.out.println("The jaccard coeff is :" + JaccardCoefficientSimilarityCalculator.calculate(list1, list2));
 	}
 	
 }
