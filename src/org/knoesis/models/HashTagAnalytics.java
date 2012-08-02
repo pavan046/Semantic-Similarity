@@ -60,8 +60,9 @@ public class HashTagAnalytics {
 		searchTwitter = new SearchTwitter(extractors);
 		termFreqGenerator = new TermFrequencyGenerator();
 		
-		this.setaTweetsOfHashTag(searchTwitter.getTweets(hashTag, true));
-		this.setaTweetsOfKeyword(searchTwitter.getTweets(termWithoutHash, false));
+		// The third parameter here is flag to set to whether to store the tweets into DB or not.
+		this.setaTweetsOfHashTag(searchTwitter.getTweets(hashTag, true, false));
+		this.setaTweetsOfKeyword(searchTwitter.getTweets(termWithoutHash, false, false));
 		this.setTermFrequencyOfHashTag(termFreqGenerator.extractListTweets(this.aTweetsOfHashTag));
 		this.setTermFrequencyOfKeyword(termFreqGenerator.extractListTweets(this.aTweetsOfKeyword));
 	}
