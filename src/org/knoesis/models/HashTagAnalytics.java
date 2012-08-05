@@ -29,7 +29,8 @@ public class HashTagAnalytics {
 	private double consistencyMeaure;
 	private double frequencyMeasure;
 	private double specificityMeasure;
-
+	private int noOfTweets;
+	private int noOfReTweets;
 
 	private Map<String, Double> termFrequencyOfHashTag;
 	private Map<String, Double> termFrequencyOfKeyword;
@@ -59,9 +60,10 @@ public class HashTagAnalytics {
 		extractors.add(new TagExtractor());
 		searchTwitter = new SearchTwitter(extractors);
 		termFreqGenerator = new TermFrequencyGenerator();
-		
+		List<AnnotatedTweet> aTweetsOfHashTagFromAPI = searchTwitter.getTweets(hashTag, true, true);
+		this.setNoOfTweets(aTweetsOfHashTagFromAPI.size());
+		this.setaTweetsOfHashTag(aTweetsOfHashTagFromAPI);
 		// The third parameter here is flag to set to whether to store the tweets into DB or not.
-		this.setaTweetsOfHashTag(searchTwitter.getTweets(hashTag, true, false));
 		this.setaTweetsOfKeyword(searchTwitter.getTweets(termWithoutHash, false, false));
 		this.setTermFrequencyOfHashTag(termFreqGenerator.extractListTweets(this.aTweetsOfHashTag));
 		this.setTermFrequencyOfKeyword(termFreqGenerator.extractListTweets(this.aTweetsOfKeyword));
@@ -157,11 +159,33 @@ public class HashTagAnalytics {
 		this.aTweetsOfKeyword = aTweetsOfKeyword;
 	}
 	
+	public int getNoOfTweets() {
+		return noOfTweets;
+	}
+
+	public void setNoOfTweets(int noOfTweets) {
+		this.noOfTweets = noOfTweets;
+	}
+	
+	public int getNoOfReTweets() {
+		return noOfReTweets;
+	}
+
+	public void setNoOfReTweets(int noOfReTweets) {
+		this.noOfReTweets = noOfReTweets;
+	}
+
+	
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub
-		return "\n frequency: "+getFrequencyMeasure() +
-				"\n Consistency: "+getConsistencyMeaure() +
-				"\n Specificity: "+getSpecificityMeasure();
+		return  getNoOfTweets() + "," 
+				+getNoOfReTweets() + ","
+				+getDistinctUsersMentionHashTag()+ ","
+				+getFrequencyMeasure() + ","
+				+getSpecificityMeasure();
 	}
+
+	
+	
 }
