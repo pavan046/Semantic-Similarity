@@ -1,6 +1,5 @@
 package org.knoesis.tags.analysis;
 
-import java.io.File;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -26,17 +25,15 @@ import org.knoesis.models.HashTagAnalytics;
  *
  */
 public class FrequencyAnalyzer implements Analyzer{
-	private static int distinctUsers = 0; 
+	//private static int distinctUsers = 0; 
 	private static double normalizedMessageCount = 0;
-	private static Map<String, Integer> twitterUsers = new HashMap<String, Integer>();
 	
 	@Override
 	public void analyze(HashTagAnalytics hashTag) {
 		countMessages(hashTag.getaTweetsOfHashTag());
-		countUsers(hashTag.getaTweetsOfHashTag());
 		//  TODO: Also setting the user set might be interesting to see how many users have majorly contributed
 		hashTag.setFrequencyMeasure(normalizedMessageCount);
-		hashTag.setDistinctUsersMentionHashTag(distinctUsers);
+		hashTag.setDistinctUsersMentionHashTag(countUsers(hashTag.getaTweetsOfHashTag()));
 	}
 	
 	/**
@@ -45,7 +42,10 @@ public class FrequencyAnalyzer implements Analyzer{
 	 * 
 	 * @param List<AnnotatedTweet> tweets
 	 */
-	private void countUsers(List<AnnotatedTweet> tweets){
+	private int countUsers(List<AnnotatedTweet> tweets){
+		int distinctUsers = 0;
+		Map<String, Integer> twitterUsers = new HashMap<String, Integer>();
+
 		for(AnnotatedTweet tweet: tweets){
 			// if the user is present then add another post posted by the user
 			if(twitterUsers.keySet().contains(tweet.getTwitter4jTweet().getFromUser()))
@@ -54,6 +54,7 @@ public class FrequencyAnalyzer implements Analyzer{
 				twitterUsers.put(tweet.getTwitter4jTweet().getFromUser(), 1);
 		}
 		distinctUsers = twitterUsers.keySet().size();
+		return distinctUsers;
 		
 	}
 	
