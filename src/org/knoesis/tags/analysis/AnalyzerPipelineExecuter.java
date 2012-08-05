@@ -77,10 +77,10 @@ public class AnalyzerPipelineExecuter {
 		analyzers.add(new ConsistencyAnalyzer());
 		// Adding Frequency Analyzer
 		analyzers.add(new FrequencyAnalyzer());
-
+		analyzers.add(new ReTweetCounter());
 		// Calling the pipeline to process.
 		AnalyzerPipelineExecuter pipeline = new AnalyzerPipelineExecuter(analyzers);
-		HashTagAnalytics tagAnalytics = pipeline.process("#obama");
+		HashTagAnalytics tagAnalytics = pipeline.process("#mitt");
 		System.out.println(tagAnalytics);
 	}
 
