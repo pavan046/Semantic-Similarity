@@ -19,6 +19,7 @@ import org.knoesis.models.AnnotatedTweet;
 import org.knoesis.twarql.extractions.Extractor;
 import org.knoesis.twarql.extractions.TagExtractor;
 import org.knoesis.twarql.extractions.TweetProcessor;
+import org.knoesis.utils.Utils;
 
 import twitter4j.Query;
 import twitter4j.QueryResult;
@@ -64,25 +65,41 @@ public class SearchTwitter {
 		query.setRpp(100);	//default is 15 tweets/search which is set to 100
 		QueryResult result = null;
 		List<AnnotatedTweet> tweets = new ArrayList<AnnotatedTweet>();
+		List<Tweet> tweetsFromAPI = null;
+		Connection conn = null;
+		
+		// Getting the connection
+		if(storeToDB)
+			conn = getConnectionToDB("XXXX", "XXXXX");
+		
 		for(int i=1; i<=15; i++){
 			query.setPage(i);
 			try {
-				System.out.println(query);
-				System.out.println(twitter.search(query));
+				//System.out.println(query);
+				//System.out.println(twitter.search(query));
 				result = twitter.search(query);
 			} catch (TwitterException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				// Waiting for 10 mins and querying. Reason: Twitter search API has rate limitations
+				// So if there is an exception wait for 10 min and query again
+				// TODO: Find a better way to fix this.
+				Utils.sleep(10*60);
+				try {
+					result = twitter.search(query);
+				} catch (TwitterException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 			
 			if (result.getTweets().isEmpty())
 				break;
 			else{
-				List<Tweet> tweetFromAPI = result.getTweets();
-				tweets.addAll(processor.process(TweetFactory.Tweet2AnnotatedTweet(tweetFromAPI, tag, isHashTag)));
+				tweetsFromAPI = result.getTweets();
+				tweets.addAll(processor.process(TweetFactory.Tweet2AnnotatedTweet(tweetsFromAPI, tag, isHashTag)));
+				
 				if(storeToDB){
-					// The eventID will be Hash_ folled by the Hashtag without hash.
-					storeIntoDB(tweetFromAPI, "Hash_"+ tag.replace("#", ""));
+					// The eventID will be Hash_ followed by the Hashtag.		
+					storeIntoDB(tweetsFromAPI, "Hash_"+ tag,conn);
 				}
 			}
 		}
@@ -102,7 +119,7 @@ public class SearchTwitter {
 	public Connection getConnectionToDB(String username,String password){
 		Connection conn = null;
 		System.out.println(new Date() + " Connecting to Database");
-		String url = "jdbc:mysql://130.108.5.96/twitris_healthcare?user=" + username + "&password=" + password;
+		String url = "jdbc:mysql://130.108.5.96/continuous_semantics?user=" + username + "&password=" + password;
 		
 		try {
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
@@ -120,7 +137,7 @@ public class SearchTwitter {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		//System.out.println("Connected to database");
+		System.out.println("Connected to database");
 		return conn;
 		
 	}
@@ -130,48 +147,54 @@ public class SearchTwitter {
 	 * @param tweets
 	 * @param eventID
 	 */
-	public void storeIntoDB(List<Tweet> tweets, String eventID){
+	public void storeIntoDB(List<Tweet> tweets, String eventID, Connection conn){
 		
 		// Please replace this with the correct username and password.
-		Connection conn = getConnectionToDB("xxxxxx", "xxxxxxx");
-		System.out.println("Connected to database");
+		PreparedStatement ps = null;
 		double latitude = 10000;
 		double longitude = 10000;
-		for(Tweet tweet : tweets){
-			String tweetContent = tweet.getText();
-			String twitterID = String.valueOf(tweet.getId());
-			String twitter_author = tweet.getFromUser();
-			Date published_date = tweet.getCreatedAt();
-			
-			if(tweet.getGeoLocation() != null)
-			{
-				latitude = tweet.getGeoLocation().getLatitude();
-				longitude = tweet.getGeoLocation().getLongitude();
-			}
-			
-			// ==PreparedStatement pstmt;=========== twitterdata table ===============
-			String sql = "INSERT INTO `twitris_healthcare`.`twitterdata` "
-					+ "(`twitter_ID`, `tweet`, `eventID`, `published_date`, "
-					+ "`twitter_author`, `latitude`, `longitude`) "
-					+ "VALUES ( ?, ?, ?, ?, ?, ?, ? );";
-			PreparedStatement ps;
-			try {
-				ps = conn.prepareStatement(sql);
-				ps.setString(1, twitterID);
-				ps.setString(2, tweetContent);
-				ps.setString(3, eventID);
+		
+		// ==PreparedStatement pstmt;=========== twitterdata table ===============
+		String sql = "INSERT IGNORE INTO `continuous_semantics`.`twitterdata` "
+				+ "(`twitter_ID`, `tweet`, `eventID`, `published_date`, "
+				+ "`twitter_author`, `latitude`, `longitude`) "
+				+ "VALUES ( ?, ?, ?, ?, ?, ?, ? );";
+					
+		try {
+			conn.setAutoCommit(false);
+			ps = conn.prepareStatement(sql);
+		
+			for(Tweet tweet : tweets){
+				String tweetContent = tweet.getText();
+				String twitterID = String.valueOf(tweet.getId());
+				String twitter_author = tweet.getFromUser();
+				Date published_date = tweet.getCreatedAt();
+				if(tweet.getGeoLocation() != null)
+				{
+					latitude = tweet.getGeoLocation().getLatitude();
+					longitude = tweet.getGeoLocation().getLongitude();
+				}			
 				
-				// hard fix for now; trying to set time stamp to GMT timezone
-				ps.setTimestamp(4, new java.sql.Timestamp(published_date.getTime()
-						+ (long) 1000 * 60 * 60 * 5));
-				ps.setString(5, twitter_author);
-				ps.setFloat(6, (float)latitude);
-				ps.setFloat(7, (float)longitude);
-				ps.execute();
-				ps.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
+					ps.setString(1, twitterID);
+					ps.setString(2, tweetContent);
+					ps.setString(3, eventID);
+					
+					// hard fix for now; trying to set time stamp to GMT timezone
+					ps.setTimestamp(4, new java.sql.Timestamp(published_date.getTime()
+							+ (long) 1000 * 60 * 60 * 5));
+					ps.setString(5, twitter_author);
+					ps.setFloat(6, (float)latitude);
+					ps.setFloat(7, (float)longitude);
+					
+					ps.addBatch();
+				
 			}
+		
+			int[] addCount = ps.executeBatch();
+			conn.commit();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 	
