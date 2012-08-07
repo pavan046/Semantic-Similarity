@@ -60,7 +60,7 @@ public class SearchTwitter {
 	 * 
 	 */
 	public List<AnnotatedTweet> getTweets(String tag, boolean isHashTag, boolean storeToDB) {
-		Twitter twitter = new TwitterFactory().getInstance("streamingpavan", "Knoesis2009");
+		Twitter twitter = new TwitterFactory().getInstance();
 		Query query = new Query(tag); 	// Query for the search
 		query.setRpp(100);	//default is 15 tweets/search which is set to 100
 		QueryResult result = null;
@@ -202,7 +202,7 @@ public class SearchTwitter {
 		List<Extractor> extractors = new ArrayList<Extractor>();
 		extractors.add(new TagExtractor());
 		SearchTwitter searchTwitter = new SearchTwitter(extractors);
-		List<AnnotatedTweet> aTweets = searchTwitter.getTweets("#election2012", false, true);
+		List<AnnotatedTweet> aTweets = searchTwitter.getTweets("#election2012", false, false);
 		Map<String, Integer> tags = new HashMap<String, Integer>();
 		for(AnnotatedTweet aTweet: aTweets){
 			for(String tag: aTweet.getHashtags()){
