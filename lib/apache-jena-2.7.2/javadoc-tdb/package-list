@@ -1,0 +1,5 @@
+com.hp.hpl.jena.tdb
+org.apache.jena.tdb.store.bulkloader3
+tdb
+tdb.cmdline
+tdb.tools
