@@ -21,7 +21,7 @@ import org.knoesis.tags.analysis.FrequencyAnalyzer;
 import org.knoesis.tags.analysis.ReTweetCounter;
 import org.knoesis.tags.analysis.SpecificityAnalyzer;
 import org.knoesis.twarql.extractions.TagExtractor;
-import org.knoesis.utils.Database;
+import org.knoesis.storage.Database;
 import org.knoesis.utils.Utils;
 
 /**
