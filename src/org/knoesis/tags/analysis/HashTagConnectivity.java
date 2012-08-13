@@ -11,6 +11,10 @@ import java.util.Scanner;
 
 import javax.swing.JFrame;
 
+import edu.uci.ics.jung.algorithms.layout.BalloonLayout;
+import edu.uci.ics.jung.algorithms.layout.CircleLayout;
+import edu.uci.ics.jung.algorithms.layout.DAGLayout;
+import edu.uci.ics.jung.algorithms.layout.FRLayout;
 import edu.uci.ics.jung.algorithms.layout.ISOMLayout;
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.algorithms.metrics.Metrics;
@@ -19,6 +23,7 @@ import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.graph.UndirectedSparseGraph;
 import edu.uci.ics.jung.graph.util.EdgeType;
 import edu.uci.ics.jung.visualization.BasicVisualizationServer;
+import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
 
 
 
@@ -137,13 +142,16 @@ public class HashTagConnectivity {
 	 * Visualizes the constucted Graph with ISOMLayout
 	 */
 	public static void graphVisualize(){
-		Layout<Integer, String> layout = new ISOMLayout(graph);
+		Layout<Integer, String> layout = new CircleLayout(graph);
 		layout.setSize(new Dimension(800,800)); // sets the initial size of the space
 		// The BasicVisualizationServer<V,E> is parameterized by the edge types
 		BasicVisualizationServer<Integer,String> vv = 
 				new BasicVisualizationServer<Integer,String>(layout);
 		vv.setPreferredSize(new Dimension(350,350)); //Sets the viewing area size
-
+		BasicVisualizationServer<Integer,String> bvv = 
+	              new BasicVisualizationServer<Integer,String>(layout);
+		vv.getRenderContext().setVertexLabelTransformer(new ToStringLabeller<Integer>());
+		
 		JFrame frame = new JFrame("Simple Graph View");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().add(vv); 
@@ -167,7 +175,7 @@ public class HashTagConnectivity {
 	}
 	
 	public static void main(String[] args) {
-		HashTagConnectivity ds = new HashTagConnectivity("./analysis/clusters/ustags_popular_nocount_100", "./analysis/clusters/ustagsall.txt");
+		HashTagConnectivity ds = new HashTagConnectivity("./analysis/clusters/ustags_popular_nocount_400", "./analysis/clusters/ustagsall.txt");
 		ds.graphVisualize();
 	}
 }
