@@ -25,7 +25,8 @@ import org.knoesis.utils.Database;
 import org.knoesis.utils.Utils;
 
 /**
- * This class is used to get the tweets from DB (for elction2012 now), extract tags and get analytics for each tag.
+ * This class is used to get the tweets from DB (for elction2012 now), 
+ * extract tags and get analytics for each tag.
  * @author koneru
  *
  */
