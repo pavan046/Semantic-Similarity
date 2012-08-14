@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.knoesis.models.AnnotatedTweet;
+import org.knoesis.storage.TagAnalyticsDataStore;
+import org.knoesis.twarql.extractions.DBpediaSpotlightExtractor;
 import org.knoesis.twarql.extractions.Extractor;
 import org.knoesis.twarql.extractions.TagExtractor;
 import org.knoesis.twarql.extractions.TweetProcessor;
@@ -57,19 +59,17 @@ public class SearchTwitter {
 	 * 
 	 */
 	public List<AnnotatedTweet> getTweets(String tag, boolean isHashTag, boolean storeToDB) {
+		TagAnalyticsDataStore dbStore = new TagAnalyticsDataStore();
 		Twitter twitter = new TwitterFactory().getInstance();
 		Query query = new Query(tag); 	// Query for the search
 		query.setRpp(100);	//default is 15 tweets/search which is set to 100
 		QueryResult result = null;
 		List<AnnotatedTweet> tweets = new ArrayList<AnnotatedTweet>();
 		List<Tweet> tweetsFromAPI = null;
-		Connection conn = null;
+
 		
-		// Getting the connection
-		if(storeToDB)
-			conn = getConnectionToDB("XXXX", "XXXXX");
 		
-		for(int i=1; i<=15; i++){
+		for(int i=1; i<=1; i++){
 			query.setPage(i);
 			try {
 				//System.out.println(query);
@@ -96,7 +96,8 @@ public class SearchTwitter {
 				
 				if(storeToDB){
 					// The eventID will be Hash_ followed by the Hashtag.		
-					storeIntoDB(tweetsFromAPI, "Hash_"+ tag,conn);
+					dbStore.storeSearchTweetsIntoDB(tweetsFromAPI, "usElections2012", tag);
+					dbStore.storeEntities(tweets, tag);
 				}
 			}
 		}
@@ -113,93 +114,38 @@ public class SearchTwitter {
 	 * @param password
 	 * @return
 	 */
-	public Connection getConnectionToDB(String username,String password){
-		Connection conn = null;
-		System.out.println(new Date() + " Connecting to Database");
-		String url = "jdbc:mysql://130.108.5.96/continuous_semantics?user=" + username + "&password=" + password;
-		
-		try {
-			Class.forName("com.mysql.jdbc.Driver").newInstance();
-			conn = DriverManager.getConnection(url);
-		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		System.out.println("Connected to database");
-		return conn;
-		
-	}
-	
-	/**
-	 * This method stores the tweets into DB.
-	 * @param tweets
-	 * @param eventID
-	 */
-	public void storeIntoDB(List<Tweet> tweets, String eventID, Connection conn){
-		
-		// Please replace this with the correct username and password.
-		PreparedStatement ps = null;
-		double latitude = 10000;
-		double longitude = 10000;
-		
-		// ==PreparedStatement pstmt;=========== twitterdata table ===============
-		String sql = "INSERT IGNORE INTO `continuous_semantics`.`twitterdata` "
-				+ "(`twitter_ID`, `tweet`, `eventID`, `published_date`, "
-				+ "`twitter_author`, `latitude`, `longitude`) "
-				+ "VALUES ( ?, ?, ?, ?, ?, ?, ? );";
-					
-		try {
-			conn.setAutoCommit(false);
-			ps = conn.prepareStatement(sql);
-		
-			for(Tweet tweet : tweets){
-				String tweetContent = tweet.getText();
-				String twitterID = String.valueOf(tweet.getId());
-				String twitter_author = tweet.getFromUser();
-				Date published_date = tweet.getCreatedAt();
-				if(tweet.getGeoLocation() != null)
-				{
-					latitude = tweet.getGeoLocation().getLatitude();
-					longitude = tweet.getGeoLocation().getLongitude();
-				}			
-				
-					ps.setString(1, twitterID);
-					ps.setString(2, tweetContent);
-					ps.setString(3, eventID);
-					
-					// hard fix for now; trying to set time stamp to GMT timezone
-					ps.setTimestamp(4, new java.sql.Timestamp(published_date.getTime()
-							+ (long) 1000 * 60 * 60 * 5));
-					ps.setString(5, twitter_author);
-					ps.setFloat(6, (float)latitude);
-					ps.setFloat(7, (float)longitude);
-					
-					ps.addBatch();
-				
-			}
-		
-			int[] addCount = ps.executeBatch();
-			conn.commit();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+//	public Connection getConnectionToDB(String username,String password){
+//		Connection conn = null;
+//		System.out.println(new Date() + " Connecting to Database");
+//		String url = "jdbc:mysql://130.108.5.96/continuous_semantics?user=" + username + "&password=" + password;
+//		
+//		try {
+//			Class.forName("com.mysql.jdbc.Driver").newInstance();
+//			conn = DriverManager.getConnection(url);
+//		} catch (InstantiationException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (IllegalAccessException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (ClassNotFoundException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (SQLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		System.out.println("Connected to database");
+//		return conn;
+//		
+//	}
 	
 	public static void main(String[] args) {
 		List<Extractor> extractors = new ArrayList<Extractor>();
 		extractors.add(new TagExtractor());
+		extractors.add(new DBpediaSpotlightExtractor());
 		SearchTwitter searchTwitter = new SearchTwitter(extractors);
-		List<AnnotatedTweet> aTweets = searchTwitter.getTweets("#election2012", false, false);
+		List<AnnotatedTweet> aTweets = searchTwitter.getTweets("#obama2012", false, true);
 		Map<String, Integer> tags = new HashMap<String, Integer>();
 		for(AnnotatedTweet aTweet: aTweets){
 			for(String tag: aTweet.getHashtags()){

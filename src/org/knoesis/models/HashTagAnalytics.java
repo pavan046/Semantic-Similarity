@@ -1,9 +1,11 @@
 package org.knoesis.models;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.knoesis.twarql.extractions.DBpediaSpotlightExtractor;
 import org.knoesis.twarql.extractions.Extractor;
 import org.knoesis.twarql.extractions.TagExtractor;
 import org.knoesis.twarql.extractions.TermFrequencyGenerator;
@@ -40,15 +42,25 @@ public class HashTagAnalytics {
 	private int distinctUsersMentionHashTag;
 	private TermFrequencyGenerator termFreqGenerator;
 	private SearchTwitter searchTwitter;
+	private Map<String, Double> topicCosineSimilarity = new HashMap<String, Double>();
+	private Map<String, Integer> dbpediaEntities = new HashMap<String, Integer>();
 	// This will get the last 1500 annotated Tweets.
 
+	private Extractor dbpediaExtractor = new DBpediaSpotlightExtractor();
 	public HashTagAnalytics(String hashTag) {
 		this.setHashTag(hashTag);
 		this.setTermWithoutHash(hashTag.replace("#", ""));
 		this.setTimeOfAnalysis(System.currentTimeMillis());
 		this.generateTweets();
+		this.extractEntities();
 	}
-	
+	/**
+	 * This method extracts entities from the tweets 
+	 */
+	private void extractEntities() {
+		
+	}
+
 	/**
 	 * Uses SearchTwitter API to generate 
 	 * 1. Tweets for hashtags and keywords
@@ -184,6 +196,14 @@ public class HashTagAnalytics {
 				+getDistinctUsersMentionHashTag()+ ","
 				+getFrequencyMeasure() + ","
 				+getSpecificityMeasure();
+	}
+
+	public Map<String, Double> getTopicCosineSimilarity() {
+		return topicCosineSimilarity;
+	}
+
+	public void setTopicCosineSimilarity(Map<String, Double> topicCosineSimilarity) {
+		this.topicCosineSimilarity.remove(topicCosineSimilarity);
 	}
 
 	

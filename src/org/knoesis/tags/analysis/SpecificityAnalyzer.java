@@ -27,14 +27,6 @@ import org.knoesis.twitter.crawler.SearchTwitter;
  *
  */
 public class SpecificityAnalyzer implements Analyzer {
-	private List<AnnotatedTweet> tweetsOfHashtag;
-	private List<AnnotatedTweet> tweetsOfKeyword;
-	private double specificityMeasure;
-	
-	private TermFrequencyGenerator termFreqGenerator = null;
-	
-	private Map<String, Integer> termFreqForTweetsOfHashtag = null;
-	private Map<String, Integer> termFreqForTweetsOfKeyword = null;
 	
 	@Override
 	public void analyze(HashTagAnalytics hashTag) {

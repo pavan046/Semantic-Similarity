@@ -1,13 +1,11 @@
 package org.knoesis.twarql.storm.topologies;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.knoesis.twarql.extractions.Extractor;
-import org.knoesis.twarql.storm.bolts.TagAnalyticsBolt;
+import org.knoesis.twarql.storm.bolts.TagExtractorBolt;
+import org.knoesis.twarql.storm.bolts.TweetDBStorageBolt;
 import org.knoesis.twarql.storm.spouts.TwarqlSpout;
 
 //Storm Imports
@@ -15,8 +13,6 @@ import backtype.storm.Config;
 import backtype.storm.LocalCluster;
 import backtype.storm.StormSubmitter;
 import backtype.storm.topology.TopologyBuilder;
-import backtype.storm.tuple.Fields;
-import backtype.storm.utils.Utils;
 
 /**
  * This class creates a topology for analyzing twitter stream.  
@@ -47,7 +43,8 @@ public class TwarqlTopology
 		LOG.debug("Creating the required Topology");
 		TopologyBuilder builder = new TopologyBuilder();
 		builder.setSpout(1, new TwarqlSpout(userName, password));
-		builder.setBolt(2, new TagAnalyticsBolt(), 1).shuffleGrouping(1);
+		builder.setBolt(2, new TagExtractorBolt(), 1).shuffleGrouping(1);
+		builder.setBolt(3, new TweetDBStorageBolt(), 1).shuffleGrouping(1);
 		boolean localMode = true;
 		
 		// LocalMode Deployment		

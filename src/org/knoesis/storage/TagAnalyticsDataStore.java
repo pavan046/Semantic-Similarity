@@ -18,6 +18,12 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
+import org.knoesis.models.AnnotatedTweet;
+import org.knoesis.models.HashTagAnalytics;
+
+import twitter4j.Status;
+import twitter4j.Tweet;
+
 import com.ibm.icu.util.Calendar;
 
 
@@ -71,9 +77,14 @@ public class TagAnalyticsDataStore implements Serializable{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-	}
 
+	}
+	/**
+	 * Inserts the ranked articles into the database with is similarity measure.
+	 * 
+	 * @param similarArticles
+	 * @param eventId
+	 */
 	public void insertWikiArticles(Map<String, Double> similarArticles,String eventId){
 		String insertQuery = "Insert into topic_wikipedia_knowledge values(?, ?, ?, ?, ?)";
 		PreparedStatement prepareStatement;
@@ -100,20 +111,215 @@ public class TagAnalyticsDataStore implements Serializable{
 			e.printStackTrace();
 		}
 	}
+
+	/**
+	 * Get the K top co occurring hashtags in the tweets for an event.
+	 * 
+	 *  
+	 *  FIXME: This has to be linked to 
+	 *  		1. Event Id
+	 *  		2. Time from last analysis 
+	 *  		3. Tags that are already considered.
+	 *  
+	 * @param limit
+	 * @return
+	 */
+	public static Set<String> getTopTags(int limit){
+		String selectQuery = "SELECT hashtag, count(hashtag) as count FROM " +
+				" tweetId_hashtag GROUP BY hashtag ORDER BY count DESC LIMIT "+limit;
+		Set<String> tags = new HashSet<String>();
+		Statement stmt;
+		try {
+			stmt = con.createStatement();
+			ResultSet results = stmt.executeQuery(selectQuery);
+			while(results.next()){
+				tags.add(results.getString(1));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return tags;
+	}
+
+	/**
+	 * Inserts the tweet into the database from streaming API. 
+	 * @param tweet
+	 * @param eventId
+	 */
+	public static void insertTweet(Status tweet, String eventId){
+		PreparedStatement ps = null;
+		double latitude = 10000;
+		double longitude = 10000;
+
+		// ==PreparedStatement pstmt;=========== twitterdata table ===============
+		String sql = "INSERT IGNORE INTO `twitterdata` "
+				+ "(`twitter_ID`, `tweet`, `eventID`, `published_date`, "
+				+ "`twitter_author`, `latitude`, `longitude`) "
+				+ "VALUES ( ?, ?, ?, ?, ?, ?, ? );";
+
+		try {
+			ps = con.prepareStatement(sql);
+
+			String tweetContent = tweet.getText();
+			String twitterId = String.valueOf(tweet.getId());
+			String twitter_author = tweet.getUser().getScreenName();
+			Date published_date = tweet.getCreatedAt();
+			if(tweet.getGeoLocation() != null)
+			{
+				latitude = tweet.getGeoLocation().getLatitude();
+				longitude = tweet.getGeoLocation().getLongitude();
+			}			
+
+			ps.setString(1, twitterId);
+			ps.setString(2, tweetContent);
+			ps.setString(3, eventId);
+
+			// hard fix for now; trying to set time stamp to GMT timezone
+			ps.setTimestamp(4, new java.sql.Timestamp(published_date.getTime()
+					+ (long) 1000 * 60 * 60 * 5));
+			ps.setString(5, twitter_author);
+			ps.setFloat(6, (float)latitude);
+			ps.setFloat(7, (float)longitude);
+
+			ps.executeUpdate();
+
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Inserts all the analytics values for the hastag
+	 * @param tagAnalytics
+	 * @param eventId
+	 */
+	public static void insertTagAnalytics(HashTagAnalytics tagAnalytics, String eventId){
+		Calendar cal = Calendar.getInstance();
+		String insert = "Insert into hashtag_analytics values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		PreparedStatement ps;
+		try {
+			ps = con.prepareStatement(insert);
+			ps.setDouble(1, tagAnalytics.getFrequencyMeasure());
+			ps.setDouble(2, tagAnalytics.getSpecificityMeasure());
+			ps.setDouble(3, tagAnalytics.getConsistencyMeaure());
+			ps.setInt(4, tagAnalytics.getDistinctUsersMentionHashTag());
+			ps.setInt(5, tagAnalytics.getNoOfTweets());
+			ps.setInt(6, tagAnalytics.getNoOfReTweets());
+			ps.setString(7, tagAnalytics.getHashTag());
+			for(String event: tagAnalytics.getTopicCosineSimilarity().keySet()){
+				if(event.equalsIgnoreCase(eventId))
+					ps.setDouble(8, tagAnalytics.getTopicCosineSimilarity().get(event));
+			}
+			ps.setString(9, eventId);
+			ps.setDate(10, new java.sql.Date(cal.getTimeInMillis()));
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
+	/**
+	 * This method stores the tweets into DB from search API.
+	 * 
+	 * The only diff from stream and search API is the datastructure used.
+	 * @param tweets
+	 * @param eventID
+	 */
+	public void storeSearchTweetsIntoDB(List<Tweet> tweets, String eventID, String tag){
+
+		// Please replace this with the correct username and password.
+		PreparedStatement ps = null;
+		double latitude = 10000;
+		double longitude = 10000;
+
+		// ==PreparedStatement pstmt;=========== twitterdata table ===============
+		String sql = "INSERT IGNORE INTO `twitterdata_tag_analytics` "
+				+ "(`twitter_ID`, `tweet`, `eventID`, `published_date`, "
+				+ "`twitter_author`, `latitude`, `longitude`, `hashtag`) "
+				+ "VALUES ( ?, ?, ?, ?, ?, ?, ?, ? );";
+
+		try {
+			con.setAutoCommit(false);
+			ps = con.prepareStatement(sql);
+
+			for(Tweet tweet : tweets){
+				String tweetContent = tweet.getText();
+				String twitterID = String.valueOf(tweet.getId());
+				String twitter_author = tweet.getFromUser();
+				Date published_date = tweet.getCreatedAt();
+				if(tweet.getGeoLocation() != null)
+				{
+					latitude = tweet.getGeoLocation().getLatitude();
+					longitude = tweet.getGeoLocation().getLongitude();
+				}			
+
+				ps.setString(1, twitterID);
+				ps.setString(2, tweetContent);
+				ps.setString(3, eventID);
+
+				// hard fix for now; trying to set time stamp to GMT timezone
+				ps.setTimestamp(4, new java.sql.Timestamp(published_date.getTime()
+						+ (long) 1000 * 60 * 60 * 5));
+				ps.setString(5, twitter_author);
+				ps.setFloat(6, (float)latitude);
+				ps.setFloat(7, (float)longitude);
+				ps.setString(8, tag);
+				ps.addBatch();
+
+			}
+
+			int[] addCount = ps.executeBatch();
+			con.commit();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	
-	
+	public void storeEntities(List<AnnotatedTweet> tweets, String tag) {
+		String insert = "Insert into entity_tag values(?, ?, ?, ?)";
+		Calendar cal = Calendar.getInstance();
+		java.sql.Date date = new java.sql.Date(cal.getTimeInMillis());
+		try {
+			PreparedStatement ps = con.prepareStatement(insert);
+			for(AnnotatedTweet tweet: tweets){
+				for(String entity: tweet.getEntities()){
+					System.out.println("inserting "+entity);
+					ps.setString(1, tag);
+					ps.setString(2, ((Long)tweet.getTwitter4jTweet().getId()).toString());
+					ps.setString(3, entity);
+					ps.setDate(4, date);
+					ps.addBatch();
+				}
+			}
+			ps.executeBatch();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+
+
 	public static void main(String[] args) {
 		TagAnalyticsDataStore dataStore = new TagAnalyticsDataStore();
-//		//dataStore.insertURL("http://news.carbon-future.co.uk/archives/42856", "224267191476953089");
-//		Set<String> tags = new HashSet<String>();
-//		tags.add("#something");
-//		tags.add("#obama");
-//		dataStore.batchInsertTags("11123112341423", tags);
+		//		//dataStore.insertURL("http://news.carbon-future.co.uk/archives/42856", "224267191476953089");
+		//		Set<String> tags = new HashSet<String>();
+		//		tags.add("#something");
+		//		tags.add("#obama");
+		//		dataStore.batchInsertTags("11123112341423", tags);
 		Map<String, Double> relatedArticles = new HashMap<String, Double>();
 		relatedArticles.put("United States", 3.23412134d);
 		relatedArticles.put("Barack Obama", 2.234123415345d);
 		dataStore.insertWikiArticles(relatedArticles, "uselections");
 	}
+
+
 
 
 }

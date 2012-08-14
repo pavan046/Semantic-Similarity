@@ -27,9 +27,8 @@ import backtype.storm.tuple.Values;
  *
  * TODO: Would be better if the schema for the triple are taken from a config file or an ontology/schema reader.
  */
-public class TagAnalyticsBolt implements IRichBolt{
+public class TweetDBStorageBolt implements IRichBolt{
 	private OutputCollector _collector;
-	private static Extractor hashTagExtractor = new TagExtractor();
 	private TagAnalyticsDataStore dataStore = new TagAnalyticsDataStore();
 	
 	@Override
@@ -51,9 +50,7 @@ public class TagAnalyticsBolt implements IRichBolt{
 	@Override
 	public void execute(Tuple input) {
 		Status status = (Status)input.getValue(0);
-		Set<String> tags = (Set<String>) hashTagExtractor.extract(status.getText());
-		String tweetId = Long.toString(status.getId());
-		dataStore.batchInsertTags(tweetId, tags);
+		dataStore.insertTweet(status, "usElections2012");		
 	}
 
 }
