@@ -24,26 +24,26 @@ import org.knoesis.twitter.crawler.SearchTwitter;
  *
  */
 public class HashTagAnalytics {
-	private String hashTag;
-	private String termWithoutHash;
-
+	private static String hashTag;
+	private static String termWithoutHash;
+	private static String presentTopic;
+	
 	// To be determined by analyzers 
-	private double consistencyMeaure;
-	private double frequencyMeasure;
-	private double specificityMeasure;
-	private int noOfTweets;
-	private int noOfReTweets;
+	private static double consistencyMeaure;
+	private static double frequencyMeasure;
+	private static double specificityMeasure;
+	private static int noOfTweets;
+	private static int noOfReTweets;
 
-	private Map<String, Double> termFrequencyOfHashTag;
-	private Map<String, Double> termFrequencyOfKeyword;
-	private List<AnnotatedTweet> aTweetsOfHashTag;
-	private List<AnnotatedTweet> aTweetsOfKeyword;
-	private long timeOfAnalysis;
-	private int distinctUsersMentionHashTag;
-	private TermFrequencyGenerator termFreqGenerator;
-	private SearchTwitter searchTwitter;
-	private Map<String, Double> topicCosineSimilarity = new HashMap<String, Double>();
-	private Map<String, Integer> dbpediaEntities = new HashMap<String, Integer>();
+	private static Map<String, Double> termFrequencyOfHashTag;
+	private static Map<String, Double> termFrequencyOfKeyword;
+	private static List<AnnotatedTweet> aTweetsOfHashTag;
+	private static List<AnnotatedTweet> aTweetsOfKeyword;
+	private static long timeOfAnalysis;
+	private static int distinctUsersMentionHashTag;
+	private static TermFrequencyGenerator termFreqGenerator;
+	private static SearchTwitter searchTwitter;
+	private static double topicCosineSimilarity = 0.0d;
 	// This will get the last 1500 annotated Tweets.
 
 	private Extractor dbpediaExtractor = new DBpediaSpotlightExtractor();
@@ -70,6 +70,7 @@ public class HashTagAnalytics {
 		// TODO: This has to be set in the config file based on analysis;
 		List<Extractor> extractors = new ArrayList<Extractor>();
 		extractors.add(new TagExtractor());
+		extractors.add(new DBpediaSpotlightExtractor());
 		searchTwitter = new SearchTwitter(extractors);
 		termFreqGenerator = new TermFrequencyGenerator();
 		List<AnnotatedTweet> aTweetsOfHashTagFromAPI = searchTwitter.getTweets(hashTag, true, true);
@@ -198,12 +199,18 @@ public class HashTagAnalytics {
 				+getSpecificityMeasure();
 	}
 
-	public Map<String, Double> getTopicCosineSimilarity() {
-		return topicCosineSimilarity;
+	public double getTopicCosineSimilarity() {
+		return this.topicCosineSimilarity;
 	}
 
-	public void setTopicCosineSimilarity(Map<String, Double> topicCosineSimilarity) {
-		this.topicCosineSimilarity.remove(topicCosineSimilarity);
+	public void setTopicCosineSimilarity(double d) {
+		this.topicCosineSimilarity = d;
+	}
+	public static String getPresentTopic() {
+		return presentTopic;
+	}
+	public static void setPresentTopic(String presentTopic) {
+		HashTagAnalytics.presentTopic = presentTopic;
 	}
 
 	

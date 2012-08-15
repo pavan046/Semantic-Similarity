@@ -3,6 +3,9 @@ package org.knoesis.utils;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.sql.Time;
 /**
  * 
@@ -48,7 +51,23 @@ public class Utils {
 		}
 		
 	}
-
+	
+	public static void wikiToDbpedia(String wikiEntity){
+	
+	}
+	
+	public static String dbpediaDecode(String dbpediaEntity){
+		String temp = null;
+		try {
+			temp = dbpediaEntity.replace("http://dbpedia.org/resource/", "");
+			String linkSpaceReplaced = temp.replace("_", "");
+			temp = URLDecoder.decode(linkSpaceReplaced,"UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return temp;
+	}
 
 	public static void main(String[] args) {
 		Utils.writeToFile("test", "My name is pramod");

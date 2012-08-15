@@ -145,7 +145,7 @@ public class SearchTwitter {
 		extractors.add(new TagExtractor());
 		extractors.add(new DBpediaSpotlightExtractor());
 		SearchTwitter searchTwitter = new SearchTwitter(extractors);
-		List<AnnotatedTweet> aTweets = searchTwitter.getTweets("#obama2012", false, true);
+		List<AnnotatedTweet> aTweets = searchTwitter.getTweets("#election2012", false, true);
 		Map<String, Integer> tags = new HashMap<String, Integer>();
 		for(AnnotatedTweet aTweet: aTweets){
 			for(String tag: aTweet.getHashtags()){

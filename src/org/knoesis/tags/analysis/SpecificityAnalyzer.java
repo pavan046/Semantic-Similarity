@@ -30,7 +30,10 @@ public class SpecificityAnalyzer implements Analyzer {
 	
 	@Override
 	public void analyze(HashTagAnalytics hashTag) {
-		hashTag.setSpecificityMeasure(CosineSimilarityCalculator.calculate(hashTag.getTermFrequencyOfHashTag(), hashTag.getTermFrequencyOfKeyword()));
+		System.out.println(hashTag.getTermFrequencyOfHashTag());
+		System.out.println(hashTag.getTermFrequencyOfKeyword());
+		hashTag.setSpecificityMeasure(CosineSimilarityCalculator.calculate(
+				hashTag.getTermFrequencyOfHashTag(), hashTag.getTermFrequencyOfKeyword()));
 	}
 
 	public static void main(String[] args) {

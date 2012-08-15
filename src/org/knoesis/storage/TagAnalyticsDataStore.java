@@ -20,6 +20,7 @@ import java.util.Set;
 
 import org.knoesis.models.AnnotatedTweet;
 import org.knoesis.models.HashTagAnalytics;
+import org.knoesis.utils.Utils;
 
 import twitter4j.Status;
 import twitter4j.Tweet;
@@ -129,6 +130,7 @@ public class TagAnalyticsDataStore implements Serializable{
 				" tweetId_hashtag GROUP BY hashtag ORDER BY count DESC LIMIT "+limit;
 		Set<String> tags = new HashSet<String>();
 		Statement stmt;
+		int i=0;
 		try {
 			stmt = con.createStatement();
 			ResultSet results = stmt.executeQuery(selectQuery);
@@ -199,7 +201,7 @@ public class TagAnalyticsDataStore implements Serializable{
 	public static void insertTagAnalytics(HashTagAnalytics tagAnalytics, String eventId){
 		Calendar cal = Calendar.getInstance();
 		String insert = "Insert into hashtag_analytics values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-		PreparedStatement ps;
+		PreparedStatement ps = null;
 		try {
 			ps = con.prepareStatement(insert);
 			ps.setDouble(1, tagAnalytics.getFrequencyMeasure());
@@ -209,15 +211,14 @@ public class TagAnalyticsDataStore implements Serializable{
 			ps.setInt(5, tagAnalytics.getNoOfTweets());
 			ps.setInt(6, tagAnalytics.getNoOfReTweets());
 			ps.setString(7, tagAnalytics.getHashTag());
-			for(String event: tagAnalytics.getTopicCosineSimilarity().keySet()){
-				if(event.equalsIgnoreCase(eventId))
-					ps.setDouble(8, tagAnalytics.getTopicCosineSimilarity().get(event));
-			}
+			ps.setDouble(8, tagAnalytics.getTopicCosineSimilarity());
+
 			ps.setString(9, eventId);
 			ps.setDate(10, new java.sql.Date(cal.getTimeInMillis()));
 			ps.executeUpdate();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
+			System.out.println(tagAnalytics);
 			e.printStackTrace();
 		}
 
@@ -244,7 +245,6 @@ public class TagAnalyticsDataStore implements Serializable{
 				+ "VALUES ( ?, ?, ?, ?, ?, ?, ?, ? );";
 
 		try {
-			con.setAutoCommit(false);
 			ps = con.prepareStatement(sql);
 
 			for(Tweet tweet : tweets){
@@ -274,13 +274,12 @@ public class TagAnalyticsDataStore implements Serializable{
 			}
 
 			int[] addCount = ps.executeBatch();
-			con.commit();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void storeEntities(List<AnnotatedTweet> tweets, String tag) {
 		String insert = "Insert into entity_tag values(?, ?, ?, ?)";
 		Calendar cal = Calendar.getInstance();
@@ -289,20 +288,45 @@ public class TagAnalyticsDataStore implements Serializable{
 			PreparedStatement ps = con.prepareStatement(insert);
 			for(AnnotatedTweet tweet: tweets){
 				for(String entity: tweet.getEntities()){
-					System.out.println("inserting "+entity);
+					entity = Utils.dbpediaDecode(entity);
 					ps.setString(1, tag);
 					ps.setString(2, ((Long)tweet.getTwitter4jTweet().getId()).toString());
 					ps.setString(3, entity);
 					ps.setDate(4, date);
+
 					ps.addBatch();
 				}
 			}
 			ps.executeBatch();
+			ps.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+	/**
+	 * Gets the ranked articles prestored in the db
+	 * 
+	 * FIXME: the topic that is hardcoded should be changed.
+	 * @return
+	 */
+	public Map<String, Double> getRankedWikiArticles() {
+		Map<String, Double> articles = new HashMap<String, Double>();
+		String selectQuery = "select wiki_article, link_jackard_similarity " +
+				"from topic_wikipedia_knowledge where eventID = 'usElections2012'";
+		try {
+			Statement stmt = con.createStatement();
+			ResultSet results = stmt.executeQuery(selectQuery);
+			while(results.next()){
+				articles.put(results.getString(1), results.getDouble(2));
+			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
+		return articles;
 	}
 
 
@@ -318,6 +342,8 @@ public class TagAnalyticsDataStore implements Serializable{
 		relatedArticles.put("Barack Obama", 2.234123415345d);
 		dataStore.insertWikiArticles(relatedArticles, "uselections");
 	}
+
+	
 
 
 

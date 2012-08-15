@@ -4,9 +4,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Set;
 
 import org.knoesis.models.AnnotatedTweet;
 import org.knoesis.models.HashTagAnalytics;
+import org.knoesis.storage.TagAnalyticsDataStore;
 import org.knoesis.twarql.extractions.Extractor;
 import org.knoesis.twarql.extractions.TagExtractor;
 import org.knoesis.twarql.extractions.TermFrequencyGenerator;
@@ -65,11 +67,13 @@ public class AnalyzerPipelineExecuter {
 	/**
 	 * For now to print the results just added print statements in every method. 
 	 * Should do it in a better way
+	 * 
+	 * Start the pipeline here and store it into the DB
 	 * @param args
 	 */
 	public static void main(String[] args) {
 		
-
+		TagAnalyticsDataStore db = new TagAnalyticsDataStore();
 		List<Analyzer> analyzers = new ArrayList<Analyzer>();
 		// Adding specificity Analyzer
 		analyzers.add(new SpecificityAnalyzer());
@@ -78,10 +82,16 @@ public class AnalyzerPipelineExecuter {
 		// Adding Frequency Analyzer
 		analyzers.add(new FrequencyAnalyzer());
 		analyzers.add(new ReTweetCounter());
+		analyzers.add(new TagTopicCosineSimilarityAnalyzer());
 		// Calling the pipeline to process.
 		AnalyzerPipelineExecuter pipeline = new AnalyzerPipelineExecuter(analyzers);
-		HashTagAnalytics tagAnalytics = pipeline.process("#mitt");
-		System.out.println(tagAnalytics);
+		Set<String> tags = db.getTopTags(10);
+		System.out.println(tags);
+		for (String tag: tags){
+			HashTagAnalytics tagAnalytics = pipeline.process("#tcot");
+			db.insertTagAnalytics(tagAnalytics, "usElections2012");
+			System.out.println(tagAnalytics);
+		}
 	}
 
 

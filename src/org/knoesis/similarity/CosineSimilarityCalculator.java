@@ -28,7 +28,9 @@ public class CosineSimilarityCalculator {
 	 * @return
 	 */
 	public static double calculate(Map<String, Double> v1, Map<String, Double> v2){
-		
+		// An exception can be added here (Custom Exception). 
+		 if (v1.isEmpty() || v2.isEmpty())
+			 return 0.0d;
 		 Set<String> both = new HashSet<String>(v1.keySet());
          both.retainAll(v2.keySet());
          double sclar = 0, norm1 = 0, norm2 = 0;
