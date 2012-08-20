@@ -20,6 +20,7 @@ import java.util.Set;
 
 import org.knoesis.models.AnnotatedTweet;
 import org.knoesis.models.HashTagAnalytics;
+import org.knoesis.twarql.extractions.TagExtractor;
 import org.knoesis.utils.Utils;
 
 import twitter4j.Status;
@@ -200,7 +201,7 @@ public class TagAnalyticsDataStore implements Serializable{
 	 */
 	public static void insertTagAnalytics(HashTagAnalytics tagAnalytics, String eventId){
 		Calendar cal = Calendar.getInstance();
-		String insert = "Insert into hashtag_analytics values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		String insert = "Insert into hashtag_analytics values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		PreparedStatement ps = null;
 		try {
 			ps = con.prepareStatement(insert);
@@ -210,11 +211,11 @@ public class TagAnalyticsDataStore implements Serializable{
 			ps.setInt(4, tagAnalytics.getDistinctUsersMentionHashTag());
 			ps.setInt(5, tagAnalytics.getNoOfTweets());
 			ps.setInt(6, tagAnalytics.getNoOfReTweets());
-			ps.setString(7, tagAnalytics.getHashTag());
+			ps.setString(7, tagAnalytics.getHashTag()+"-new");
 			ps.setDouble(8, tagAnalytics.getTopicCosineSimilarity());
-
-			ps.setString(9, eventId);
-			ps.setDate(10, new java.sql.Date(cal.getTimeInMillis()));
+			ps.setDouble(9, tagAnalytics.getTopicSubsumptionSimilarity());
+			ps.setString(10, eventId);
+			ps.setDate(11, new java.sql.Date(cal.getTimeInMillis()));
 			ps.executeUpdate();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -328,6 +329,32 @@ public class TagAnalyticsDataStore implements Serializable{
 		
 		return articles;
 	}
+	
+	public void addTags(){
+		TagExtractor extract = new TagExtractor();
+		String select = "select twitter_ID, tweet from twitterdata";
+		try {
+			Statement stmt = con.createStatement();
+			ResultSet result = stmt.executeQuery(select);
+			while(result.next()){
+				String insert = "Insert into tweetId_hashtag values(?, ?)";
+				String tweetId = result.getString(1);
+				String tweet = result.getString(2);
+				Set<String> tags = extract.extract(tweet);
+				PreparedStatement ps = con.prepareStatement(insert);
+				for (String tag: tags){
+					ps.setString(1, tweetId);
+					ps.setString(2, tag);
+					ps.addBatch();
+				}
+				if (tags != null || !tags.isEmpty())
+					ps.executeUpdate();
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
 
 	public static void main(String[] args) {
@@ -337,10 +364,11 @@ public class TagAnalyticsDataStore implements Serializable{
 		//		tags.add("#something");
 		//		tags.add("#obama");
 		//		dataStore.batchInsertTags("11123112341423", tags);
-		Map<String, Double> relatedArticles = new HashMap<String, Double>();
-		relatedArticles.put("United States", 3.23412134d);
-		relatedArticles.put("Barack Obama", 2.234123415345d);
-		dataStore.insertWikiArticles(relatedArticles, "uselections");
+//		Map<String, Double> relatedArticles = new HashMap<String, Double>();
+//		relatedArticles.put("United States", 3.23412134d);
+//		relatedArticles.put("Barack Obama", 2.234123415345d);
+//		dataStore.insertWikiArticles(relatedArticles, "uselections");
+		dataStore.addTags();
 	}
 
 	

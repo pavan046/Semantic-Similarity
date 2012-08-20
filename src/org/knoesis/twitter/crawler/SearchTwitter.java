@@ -103,7 +103,7 @@ public class SearchTwitter {
 		}
 		
 		//System.out.println(tweets);
-		System.out.println(tweets.size());
+		//System.out.println(tweets.size());
 		return tweets;
 
 	}

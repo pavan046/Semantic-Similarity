@@ -10,6 +10,7 @@ import org.knoesis.twarql.extractions.Extractor;
 import org.knoesis.twarql.extractions.TagExtractor;
 import org.knoesis.twarql.extractions.TermFrequencyGenerator;
 import org.knoesis.twitter.crawler.SearchTwitter;
+import org.knoesis.utils.Utils;
 
 /**
  * This data has either have to go to the 
@@ -24,26 +25,28 @@ import org.knoesis.twitter.crawler.SearchTwitter;
  *
  */
 public class HashTagAnalytics {
-	private static String hashTag;
-	private static String termWithoutHash;
-	private static String presentTopic;
+	private String hashTag;
+	private String termWithoutHash;
+	private String presentTopic;
 	
 	// To be determined by analyzers 
-	private static double consistencyMeaure;
-	private static double frequencyMeasure;
-	private static double specificityMeasure;
-	private static int noOfTweets;
-	private static int noOfReTweets;
+	private double consistencyMeaure;
+	private double frequencyMeasure;
+	private double specificityMeasure;
+	private int noOfTweets;
+	private int noOfReTweets;
 
-	private static Map<String, Double> termFrequencyOfHashTag;
-	private static Map<String, Double> termFrequencyOfKeyword;
-	private static List<AnnotatedTweet> aTweetsOfHashTag;
-	private static List<AnnotatedTweet> aTweetsOfKeyword;
-	private static long timeOfAnalysis;
-	private static int distinctUsersMentionHashTag;
-	private static TermFrequencyGenerator termFreqGenerator;
-	private static SearchTwitter searchTwitter;
-	private static double topicCosineSimilarity = 0.0d;
+	private Map<String, Double> termFrequencyOfHashTag;
+	private Map<String, Double> termFrequencyOfKeyword;
+	private List<AnnotatedTweet> aTweetsOfHashTag;
+	private List<AnnotatedTweet> aTweetsOfKeyword;
+	private long timeOfAnalysis;
+	private int distinctUsersMentionHashTag;
+	private TermFrequencyGenerator termFreqGenerator;
+	private SearchTwitter searchTwitter;
+	private double topicCosineSimilarity = 0.0d;
+	private double topicSubsumptionSimilarity = 0.0d;
+	private Map<String, Double> entityFrequency = new HashMap<String, Double>();
 	// This will get the last 1500 annotated Tweets.
 
 	private Extractor dbpediaExtractor = new DBpediaSpotlightExtractor();
@@ -80,6 +83,7 @@ public class HashTagAnalytics {
 		this.setaTweetsOfKeyword(searchTwitter.getTweets(termWithoutHash, false, false));
 		this.setTermFrequencyOfHashTag(termFreqGenerator.extractListTweets(this.aTweetsOfHashTag));
 		this.setTermFrequencyOfKeyword(termFreqGenerator.extractListTweets(this.aTweetsOfKeyword));
+		this.setEntityFrequecy();
 	}
 
 	
@@ -206,11 +210,39 @@ public class HashTagAnalytics {
 	public void setTopicCosineSimilarity(double d) {
 		this.topicCosineSimilarity = d;
 	}
-	public static String getPresentTopic() {
+	public String getPresentTopic() {
 		return presentTopic;
 	}
-	public static void setPresentTopic(String presentTopic) {
-		HashTagAnalytics.presentTopic = presentTopic;
+	public void setPresentTopic(String presentTopic) {
+		this.presentTopic = presentTopic;
+	}
+	/**
+	 * Retrieves the annotated tweets from the hastags to get the
+	 * Entities frequency.
+	 * @param tweets
+	 * @return
+	 */
+	private void setEntityFrequecy() {
+		Map<String, Double> entitiesFrequency = new HashMap<String, Double>();
+		for(AnnotatedTweet tweet: this.getaTweetsOfHashTag()){
+			for(String entity: tweet.getEntities()){
+				if (entitiesFrequency.keySet().contains(entity))
+					entitiesFrequency.put(Utils.dbpediaDecode(entity), entitiesFrequency.get(entity)+1);
+				else
+					entitiesFrequency.put(Utils.dbpediaDecode(entity), 1.0d);
+			}
+		}
+		this.entityFrequency = entitiesFrequency;
+	}
+	public Map<String, Double> getEntityFrequency() {
+		return entityFrequency;
+	}
+	public double getTopicSubsumptionSimilarity() {
+		return topicSubsumptionSimilarity;
+	}
+	public void setTopicSubsumptionSimilarity(
+			double topicSubsumptionSimilarity) {
+		this.topicSubsumptionSimilarity = topicSubsumptionSimilarity;
 	}
 
 	

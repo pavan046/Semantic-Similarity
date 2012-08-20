@@ -60,7 +60,7 @@ public class Utils {
 		String temp = null;
 		try {
 			temp = dbpediaEntity.replace("http://dbpedia.org/resource/", "");
-			String linkSpaceReplaced = temp.replace("_", "");
+			String linkSpaceReplaced = temp.replace("_", " ");
 			temp = URLDecoder.decode(linkSpaceReplaced,"UTF-8");
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block

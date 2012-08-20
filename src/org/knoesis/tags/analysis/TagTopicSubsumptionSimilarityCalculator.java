@@ -7,6 +7,7 @@ import java.util.Map;
 import org.knoesis.models.AnnotatedTweet;
 import org.knoesis.models.HashTagAnalytics;
 import org.knoesis.similarity.CosineSimilarityCalculator;
+import org.knoesis.similarity.WeightedSubsumptionSimilarityCalculator;
 import org.knoesis.storage.TagAnalyticsDataStore;
 import org.knoesis.utils.Utils;
 
@@ -17,7 +18,7 @@ import org.knoesis.utils.Utils;
  * @author pavan
  *
  */
-public class TagTopicCosineSimilarityAnalyzer implements Analyzer {
+public class TagTopicSubsumptionSimilarityCalculator implements Analyzer {
 	private TagAnalyticsDataStore db = new TagAnalyticsDataStore();
 	private Map<String, Double> tweetEntitiesFrequecy, wikiEntitiesSimilarityRanking;
 	
@@ -31,7 +32,7 @@ public class TagTopicCosineSimilarityAnalyzer implements Analyzer {
 		this.initializeData(hashTag);
 		System.out.println(tweetEntitiesFrequecy);
 		System.out.println(wikiEntitiesSimilarityRanking);
-		hashTag.setTopicCosineSimilarity(CosineSimilarityCalculator.calculate(
+		hashTag.setTopicSubsumptionSimilarity(WeightedSubsumptionSimilarityCalculator.calculate(
 				tweetEntitiesFrequecy, wikiEntitiesSimilarityRanking));
 	}
 

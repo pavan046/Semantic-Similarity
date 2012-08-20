@@ -83,15 +83,14 @@ public class AnalyzerPipelineExecuter {
 		analyzers.add(new FrequencyAnalyzer());
 		analyzers.add(new ReTweetCounter());
 		analyzers.add(new TagTopicCosineSimilarityAnalyzer());
+		analyzers.add(new TagTopicSubsumptionSimilarityCalculator());
 		// Calling the pipeline to process.
 		AnalyzerPipelineExecuter pipeline = new AnalyzerPipelineExecuter(analyzers);
-		Set<String> tags = db.getTopTags(10);
-		System.out.println(tags);
-		for (String tag: tags){
-			HashTagAnalytics tagAnalytics = pipeline.process("#tcot");
+		Set<String> tags = db.getTopTags(15);
+		//for (String tag: tags){
+			HashTagAnalytics tagAnalytics = pipeline.process("#texas");
 			db.insertTagAnalytics(tagAnalytics, "usElections2012");
-			System.out.println(tagAnalytics);
-		}
+		//}
 	}
 
 
