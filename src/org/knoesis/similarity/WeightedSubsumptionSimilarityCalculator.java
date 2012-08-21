@@ -50,7 +50,7 @@ public class WeightedSubsumptionSimilarityCalculator {
 		//double minusWeightNormalized = minusWeightSum/minus.size();
 		
 		weightedSubsumption = 
-				intersectionEntitiesWeights/(intersectionEntitiesWeights + minusWeightSum*averageSetValues);
+				intersectionEntitiesWeights/ minusWeightSum*averageSetValues;
 		
 		return weightedSubsumption;
 	}

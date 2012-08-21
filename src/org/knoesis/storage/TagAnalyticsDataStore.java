@@ -211,7 +211,7 @@ public class TagAnalyticsDataStore implements Serializable{
 			ps.setInt(4, tagAnalytics.getDistinctUsersMentionHashTag());
 			ps.setInt(5, tagAnalytics.getNoOfTweets());
 			ps.setInt(6, tagAnalytics.getNoOfReTweets());
-			ps.setString(7, tagAnalytics.getHashTag()+"-new");
+			ps.setString(7, tagAnalytics.getHashTag());
 			ps.setDouble(8, tagAnalytics.getTopicCosineSimilarity());
 			ps.setDouble(9, tagAnalytics.getTopicSubsumptionSimilarity());
 			ps.setString(10, eventId);
@@ -326,34 +326,73 @@ public class TagAnalyticsDataStore implements Serializable{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		return articles;
 	}
-	
+	/**
+	 * A dummy function to get the tweets from the DB and add the 
+	 * extracted tags back to the database
+	 */
 	public void addTags(){
 		TagExtractor extract = new TagExtractor();
 		String select = "select twitter_ID, tweet from twitterdata";
+		String insert = "Insert into tweetId_hashtag values(?, ?)";
+
 		try {
 			Statement stmt = con.createStatement();
 			ResultSet result = stmt.executeQuery(select);
 			while(result.next()){
-				String insert = "Insert into tweetId_hashtag values(?, ?)";
 				String tweetId = result.getString(1);
 				String tweet = result.getString(2);
 				Set<String> tags = extract.extract(tweet);
 				PreparedStatement ps = con.prepareStatement(insert);
+				if (tags == null || tags.isEmpty())
+					continue;
 				for (String tag: tags){
 					ps.setString(1, tweetId);
-					ps.setString(2, tag);
+					ps.setString(2, tag.toLowerCase());
 					ps.addBatch();
 				}
-				if (tags != null || !tags.isEmpty())
-					ps.executeUpdate();
+				ps.executeUpdate();
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	public ResultSet getRelevancyManualEvalated(){
+		String selectQuery = "SELECT hashtag, relevant, count(*) as count FROM manual_evaluation GROUP BY hashtag, relevant ";
+		ResultSet results = null;
+		try{
+			Statement stmt = con.createStatement();
+			results = stmt.executeQuery(selectQuery);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return results;
+
+	}
+
+	public void storeRelevancyPercentage(Map<String, Double> relevancy) {
+		String insert = "Insert into manual_evaluation_percentage values(?, ?)";
+		try {
+			PreparedStatement ps = con.prepareStatement(insert);
+			for(String tag: relevancy.keySet()){
+				ps.setString(1, tag);
+				ps.setDouble(2, relevancy.get(tag));
+
+				ps.addBatch();
+			}
+			ps.executeBatch();
+			ps.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 
 
@@ -364,14 +403,14 @@ public class TagAnalyticsDataStore implements Serializable{
 		//		tags.add("#something");
 		//		tags.add("#obama");
 		//		dataStore.batchInsertTags("11123112341423", tags);
-//		Map<String, Double> relatedArticles = new HashMap<String, Double>();
-//		relatedArticles.put("United States", 3.23412134d);
-//		relatedArticles.put("Barack Obama", 2.234123415345d);
-//		dataStore.insertWikiArticles(relatedArticles, "uselections");
+		//		Map<String, Double> relatedArticles = new HashMap<String, Double>();
+		//		relatedArticles.put("United States", 3.23412134d);
+		//		relatedArticles.put("Barack Obama", 2.234123415345d);
+		//		dataStore.insertWikiArticles(relatedArticles, "uselections");
 		dataStore.addTags();
 	}
 
-	
+
 
 
 

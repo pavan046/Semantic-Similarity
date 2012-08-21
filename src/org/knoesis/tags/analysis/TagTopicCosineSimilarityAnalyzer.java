@@ -29,8 +29,8 @@ public class TagTopicCosineSimilarityAnalyzer implements Analyzer {
 	@Override
 	public void analyze(HashTagAnalytics hashTag) {
 		this.initializeData(hashTag);
-		System.out.println(tweetEntitiesFrequecy);
-		System.out.println(wikiEntitiesSimilarityRanking);
+		//System.out.println(tweetEntitiesFrequecy);
+		//System.out.println(wikiEntitiesSimilarityRanking);
 		hashTag.setTopicCosineSimilarity(CosineSimilarityCalculator.calculate(
 				tweetEntitiesFrequecy, wikiEntitiesSimilarityRanking));
 	}

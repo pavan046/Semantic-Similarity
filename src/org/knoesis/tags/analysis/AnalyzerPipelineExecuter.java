@@ -86,11 +86,11 @@ public class AnalyzerPipelineExecuter {
 		analyzers.add(new TagTopicSubsumptionSimilarityCalculator());
 		// Calling the pipeline to process.
 		AnalyzerPipelineExecuter pipeline = new AnalyzerPipelineExecuter(analyzers);
-		Set<String> tags = db.getTopTags(15);
-		//for (String tag: tags){
-			HashTagAnalytics tagAnalytics = pipeline.process("#texas");
+		Set<String> tags = db.getTopTags(100);
+		for (String tag: tags){
+			HashTagAnalytics tagAnalytics = pipeline.process(tag);
 			db.insertTagAnalytics(tagAnalytics, "usElections2012");
-		//}
+		}
 	}
 
 
