@@ -395,6 +395,54 @@ public class TagAnalyticsDataStore implements Serializable{
 
 	}
 
+	public static Map<String, Double> getEntitiesFrequencyForHashtags(String tag){
+		String select = "SELECT entity, count(entity) as frequency "+
+				"FROM twitterdata_tag_analytics, entity_tag " +
+				"WHERE twitterdata_tag_analytics.twitter_ID = entity_tag.tweetId and entity_tag.hashtag = '"+tag+"' " +
+				"GROUP By entity";
+		Map<String, Double> entitiesFrequency = new HashMap<String, Double>();
+		try {
+			Statement stmt = con.createStatement();
+			ResultSet results = stmt.executeQuery(select);
+			while(results.next()){
+				entitiesFrequency.put(results.getString("entity"), results.getDouble("frequency"));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return entitiesFrequency;
+
+	}
+
+	public static void storeWeightedSubsumptionScore(String tag, Double score){
+		String insert = "update hashtag_analytics set topic_subsumtion_similarity = "+score+
+				" where hashtag = '"+tag+"'";
+		System.out.println(insert);
+		try {
+			Statement stmt = con.createStatement();
+			stmt.executeUpdate(insert);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
+	public static Set<String> getTagsfromTagAnalytics(){
+		String select = "Select hashtag from hashtag_analytics;";
+		Set<String> tags = new HashSet<String>();
+		try{
+			Statement stmt = con.createStatement();
+			ResultSet results = stmt.executeQuery(select);
+			while(results.next())
+				tags.add(results.getString("hashtag"));
+		} catch (SQLException e){
+			e.printStackTrace();
+		}
+		return tags;
+
+	}
 
 	public static void main(String[] args) {
 		TagAnalyticsDataStore dataStore = new TagAnalyticsDataStore();

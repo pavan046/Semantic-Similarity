@@ -113,13 +113,13 @@ public class TopicSpecificSimilarityCalculator {
 			// Uncomment to print just the jaccardcoefficient
 			//results.put(secondLink, jakkardIndex);
 			// TODO: For now not considering the second hop
-			/*
-			 * for(String thirdLink: links){
+			
+			 for(String thirdLink: links){
 
 				if(!results.keySet().contains(thirdLink))
 					results.put(thirdLink, 1.0d);
 			}
-			 */
+			 
 		}
 		relatedArticles = results;
 		return results;
@@ -141,9 +141,9 @@ public class TopicSpecificSimilarityCalculator {
 			Writer write = new FileWriter(new File("analysis/olympics_jakkard.model"));
 			Writer writeTypes = new FileWriter(new File("analysis/olympics.types"));
 			//United_States_presidential_election,_2012
-			TopicSpecificSimilarityCalculator wikiCalc = new TopicSpecificSimilarityCalculator("2012 Summer Olympics");
+			TopicSpecificSimilarityCalculator wikiCalc = new TopicSpecificSimilarityCalculator("United States presidential election, 2012");
 			Map<String, Double> relatedLinks = wikiCalc.calculate();
-			wikiCalc.storeToDB("olympics2012");
+			wikiCalc.storeToDB("usElections2012");
 //			for(String link: relatedLinks.keySet()){
 //				write.append(link+"\t"+relatedLinks.get(link)+"\n");
 //				List<String> types = DBpediaTypeGetter.getType(link);

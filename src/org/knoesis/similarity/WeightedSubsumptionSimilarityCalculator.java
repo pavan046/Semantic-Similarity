@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.knoesis.storage.TagAnalyticsDataStore;
+
 /**
  * This class calculates the similarity using JackardCoefficient.
  * 
@@ -48,16 +50,28 @@ public class WeightedSubsumptionSimilarityCalculator {
 		for(String entity: minus)
 			minusWeightSum += subset.get(entity);
 		//double minusWeightNormalized = minusWeightSum/minus.size();
-		
+		System.out.println("Intersection Size: "+intersectionOfSets.size());
+		System.out.println("Minus Size: "+minus.size());
+		System.out.println("Minus:" + minusWeightSum);
 		weightedSubsumption = 
-				intersectionEntitiesWeights/ minusWeightSum*averageSetValues;
+	intersectionEntitiesWeights/ (intersectionEntitiesWeights + minusWeightSum*averageSetValues);
 		
 		return weightedSubsumption;
 	}
 	
 		
 	public static void main(String[] args) {
-		
+		TagAnalyticsDataStore ds = new TagAnalyticsDataStore();
+		Set<String> tags = ds.getTagsfromTagAnalytics();
+		Map<String, Double> wikiRelatedConcepts = ds.getRankedWikiArticles();
+		System.out.println(wikiRelatedConcepts);
+		for(String tag: tags){
+			System.out.println(tag);
+			Map<String, Double> tagEntityFrequecy = ds.getEntitiesFrequencyForHashtags(tag);
+			System.out.println(tagEntityFrequecy);
+			Double weightedSusumption = calculate(tagEntityFrequecy, wikiRelatedConcepts);
+			ds.storeWeightedSubsumptionScore(tag, weightedSusumption);
+		}
 	}
 	
 }
