@@ -3,6 +3,7 @@ package org.knoesis.tags.analysis;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.knoesis.models.AnnotatedTweet;
 import org.knoesis.models.HashTagAnalytics;
@@ -32,8 +33,11 @@ public class TagTopicSubsumptionSimilarityCalculator implements Analyzer {
 		this.initializeData(hashTag);
 		System.out.println(tweetEntitiesFrequecy);
 		System.out.println(wikiEntitiesSimilarityRanking);
-		hashTag.setTopicSubsumptionSimilarity(WeightedSubsumptionSimilarityCalculator.calculate(
-				tweetEntitiesFrequecy, wikiEntitiesSimilarityRanking));
+		Map<Integer, Double> similarityMeasures = WeightedSubsumptionSimilarityCalculator.calculate(
+				tweetEntitiesFrequecy, wikiEntitiesSimilarityRanking);
+		hashTag.setTopicWeightedSubsumptionSimilarity(similarityMeasures.get(1));
+		hashTag.setTopicNonWeightedSubsumptionSimilarity(similarityMeasures.get(2));
+		//hashTag.setTopicSubsumptionSimilarity();
 	}
 
 }

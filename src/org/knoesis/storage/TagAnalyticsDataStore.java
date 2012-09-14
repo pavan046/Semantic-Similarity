@@ -9,6 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -94,7 +95,7 @@ public class TagAnalyticsDataStore implements Serializable{
 			prepareStatement = con.prepareStatement(insertQuery);
 			Set<String> articles = similarArticles.keySet();
 			Calendar cal = Calendar.getInstance();
-			java.sql.Date sqlDate = new java.sql.Date(cal.getTimeInMillis());
+			Timestamp timestamp = new Timestamp(cal.getTimeInMillis());
 			for(String article: articles){
 				System.out.println("Inserting Data -- "+article);
 				double linkJackardSim = similarArticles.get(article);
@@ -103,7 +104,7 @@ public class TagAnalyticsDataStore implements Serializable{
 				prepareStatement.setString(2, article);
 				prepareStatement.setDouble(3, linkJackardSim);
 				prepareStatement.setDouble(4, jackardSim);
-				prepareStatement.setDate(5, sqlDate);
+				prepareStatement.setTimestamp(5, timestamp);
 				prepareStatement.addBatch();
 			}
 			prepareStatement.executeBatch();
@@ -201,7 +202,7 @@ public class TagAnalyticsDataStore implements Serializable{
 	 */
 	public static void insertTagAnalytics(HashTagAnalytics tagAnalytics, String eventId){
 		Calendar cal = Calendar.getInstance();
-		String insert = "Insert into hashtag_analytics values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		String insert = "Insert into hashtag_analytics values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		PreparedStatement ps = null;
 		try {
 			ps = con.prepareStatement(insert);
@@ -213,9 +214,10 @@ public class TagAnalyticsDataStore implements Serializable{
 			ps.setInt(6, tagAnalytics.getNoOfReTweets());
 			ps.setString(7, tagAnalytics.getHashTag());
 			ps.setDouble(8, tagAnalytics.getTopicCosineSimilarity());
-			ps.setDouble(9, tagAnalytics.getTopicSubsumptionSimilarity());
-			ps.setString(10, eventId);
-			ps.setDate(11, new java.sql.Date(cal.getTimeInMillis()));
+			ps.setDouble(9, tagAnalytics.getTopicWeightedSubsumptionSimilarity());
+			ps.setDouble(10, tagAnalytics.getTopicNonWeightedSubsumptionSimilarity());
+			ps.setString(11, eventId);
+			ps.setTimestamp(12,  new Timestamp(cal.getTimeInMillis()));
 			ps.executeUpdate();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -416,7 +418,7 @@ public class TagAnalyticsDataStore implements Serializable{
 	}
 
 	public static void storeWeightedSubsumptionScore(String tag, Double score){
-		String insert = "update hashtag_analytics set topic_subsumtion_similarity = "+score+
+		String insert = "update hashtag_analytics set topic_subset = "+score+
 				" where hashtag = '"+tag+"'";
 		System.out.println(insert);
 		try {

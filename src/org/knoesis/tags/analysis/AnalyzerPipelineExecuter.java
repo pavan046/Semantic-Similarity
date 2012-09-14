@@ -88,6 +88,8 @@ public class AnalyzerPipelineExecuter {
 		AnalyzerPipelineExecuter pipeline = new AnalyzerPipelineExecuter(analyzers);
 		Set<String> tags = db.getTopTags(100);
 		for (String tag: tags){
+			if (tag.equalsIgnoreCase("#obama"))
+				continue;
 			HashTagAnalytics tagAnalytics = pipeline.process(tag);
 			db.insertTagAnalytics(tagAnalytics, "usElections2012");
 		}

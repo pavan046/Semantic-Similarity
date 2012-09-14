@@ -45,7 +45,8 @@ public class HashTagAnalytics {
 	private TermFrequencyGenerator termFreqGenerator;
 	private SearchTwitter searchTwitter;
 	private double topicCosineSimilarity = 0.0d;
-	private double topicSubsumptionSimilarity = 0.0d;
+	private double topicWeightedSubsumptionSimilarity = 0.0d;
+	private double topicNonWeightedSubsumptionSimilarity = 0.0d;
 	private Map<String, Double> entityFrequency = new HashMap<String, Double>();
 	// This will get the last 1500 annotated Tweets.
 
@@ -237,12 +238,19 @@ public class HashTagAnalytics {
 	public Map<String, Double> getEntityFrequency() {
 		return entityFrequency;
 	}
-	public double getTopicSubsumptionSimilarity() {
-		return topicSubsumptionSimilarity;
+	public double getTopicNonWeightedSubsumptionSimilarity() {
+		return topicNonWeightedSubsumptionSimilarity;
 	}
-	public void setTopicSubsumptionSimilarity(
-			double topicSubsumptionSimilarity) {
-		this.topicSubsumptionSimilarity = topicSubsumptionSimilarity;
+	public void setTopicNonWeightedSubsumptionSimilarity(
+			double topicNonWeightedSubsumptionSimilarity) {
+		this.topicNonWeightedSubsumptionSimilarity = topicNonWeightedSubsumptionSimilarity;
+	}
+	public double getTopicWeightedSubsumptionSimilarity() {
+		return topicWeightedSubsumptionSimilarity;
+	}
+	public void setTopicWeightedSubsumptionSimilarity(
+			double topicWeightedSubsumptionSimilarity) {
+		this.topicWeightedSubsumptionSimilarity = topicWeightedSubsumptionSimilarity;
 	}
 
 	
