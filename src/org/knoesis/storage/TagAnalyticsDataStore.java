@@ -127,7 +127,7 @@ public class TagAnalyticsDataStore implements Serializable{
 	 * @param limit
 	 * @return
 	 */
-	public static Set<String> getTopTags(int limit){
+	public Set<String> getTopTags(int limit){
 		String selectQuery = "SELECT hashtag, count(hashtag) as count FROM " +
 				" tweetId_hashtag GROUP BY hashtag ORDER BY count DESC LIMIT "+limit;
 		Set<String> tags = new HashSet<String>();
@@ -151,7 +151,7 @@ public class TagAnalyticsDataStore implements Serializable{
 	 * @param tweet
 	 * @param eventId
 	 */
-	public static void insertTweet(Status tweet, String eventId){
+	public void insertTweet(Status tweet, String eventId){
 		PreparedStatement ps = null;
 		double latitude = 10000;
 		double longitude = 10000;
@@ -200,7 +200,7 @@ public class TagAnalyticsDataStore implements Serializable{
 	 * @param tagAnalytics
 	 * @param eventId
 	 */
-	public static void insertTagAnalytics(HashTagAnalytics tagAnalytics, String eventId){
+	public void insertTagAnalytics(HashTagAnalytics tagAnalytics, String eventId){
 		Calendar cal = Calendar.getInstance();
 		String insert = "Insert into hashtag_analytics values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		PreparedStatement ps = null;
@@ -397,7 +397,7 @@ public class TagAnalyticsDataStore implements Serializable{
 
 	}
 
-	public static Map<String, Double> getEntitiesFrequencyForHashtags(String tag){
+	public Map<String, Double> getEntitiesFrequencyForHashtags(String tag){
 		String select = "SELECT entity, count(entity) as frequency "+
 				"FROM twitterdata_tag_analytics, entity_tag " +
 				"WHERE twitterdata_tag_analytics.twitter_ID = entity_tag.tweetId and entity_tag.hashtag = '"+tag+"' " +
@@ -431,7 +431,7 @@ public class TagAnalyticsDataStore implements Serializable{
 
 	}
 
-	public static Set<String> getTagsfromTagAnalytics(){
+	public Set<String> getTagsfromTagAnalytics(){
 		String select = "Select hashtag from hashtag_analytics;";
 		Set<String> tags = new HashSet<String>();
 		try{
