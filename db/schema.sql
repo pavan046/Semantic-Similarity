@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Aug 20, 2012 at 04:26 PM
+-- Generation Time: Sep 19, 2012 at 05:45 PM
 -- Server version: 5.5.25
 -- PHP Version: 5.4.4
 
@@ -43,10 +43,36 @@ CREATE TABLE `hashtag_analytics` (
   `hashtag` varchar(150) NOT NULL,
   `topic_cosine_similarity` double NOT NULL,
   `topic_subsumtion_similarity` double NOT NULL,
+  `raw_subsumption` double NOT NULL,
   `eventID` varchar(100) NOT NULL,
   `time_last_analyzed` datetime NOT NULL,
   PRIMARY KEY (`hashtag`,`eventID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Analysis of the max last 1500 tweets through twitter seach';
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `manual_evaluation`
+--
+
+CREATE TABLE `manual_evaluation` (
+  `twitter_ID` varchar(140) NOT NULL,
+  `hashtag` varchar(140) NOT NULL,
+  `relevant` int(11) NOT NULL,
+  PRIMARY KEY (`twitter_ID`,`hashtag`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `manual_evaluation_percentage`
+--
+
+CREATE TABLE `manual_evaluation_percentage` (
+  `hashtag` varchar(140) NOT NULL,
+  `relevancy_percentage` double NOT NULL,
+  PRIMARY KEY (`hashtag`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -70,8 +96,9 @@ CREATE TABLE `topic_wikipedia_knowledge` (
 --
 
 CREATE TABLE `tweetId_hashtag` (
-  `tweetid` varchar(40) NOT NULL,
-  `hashtag` varchar(40) NOT NULL
+  `twitter_ID` varchar(140) NOT NULL,
+  `hashtag` varchar(140) NOT NULL,
+  PRIMARY KEY (`twitter_ID`,`hashtag`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------

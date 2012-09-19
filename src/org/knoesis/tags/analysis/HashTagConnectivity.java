@@ -162,7 +162,7 @@ public class HashTagConnectivity {
 	public static int reachability(String tag){
 		DijkstraShortestPath shortestPath = new DijkstraShortestPath<String, String>(graph);
 		Map<String, Double> distanceMap = shortestPath.getDistanceMap(tag, popularTags);
-		System.out.println(distanceMap.keySet().size() + " -- " + popularTags.size());
+		System.out.println(distanceMap.keySet      ().size() + " -- " + popularTags.size());
 		int i = 1;
 		for(String vertex: popularTags){
 			if(!distanceMap.keySet().contains(vertex))
