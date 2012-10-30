@@ -148,6 +148,9 @@ public class DBpediaSpotlightExtractor implements Extractor {
 		//                  So if two processors try to set the same field, one will overrule the other.
 		//                  Should have instead an updateEntities() method.
 		tweet.setEntities(extract(tweet.getTwitter4jTweet().getText()));
+		if (tweet.getTwitter4jTweet().getText().toLowerCase().contains("sandy")){
+				tweet.getEntities().add("http://dbpedia.org/resource/Hurricane_Sandy");
+		}
 	}
 	
     
@@ -155,7 +158,8 @@ public class DBpediaSpotlightExtractor implements Extractor {
 
 
     	DBpediaSpotlightExtractor c = new DBpediaSpotlightExtractor();
-    	String text = "Take Action: Stop Obama's Unconstitutional India Appointments #tcot #freedomworks http://t.co/xGUa0aWi";
+    	String text = "Hurricane Sandy Oregan is going to be here soon in New York ";
+    	System.out.println(text.toLowerCase().contains("sandy"));
     	//String text = "Arrazola Medical Center in #NorthPalmBeach, #FL - http://t.co/pw6bQDEH";
     	System.out.println(text);
     	System.out.println(c.extract(text));

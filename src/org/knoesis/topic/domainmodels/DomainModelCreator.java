@@ -140,7 +140,7 @@ public class DomainModelCreator {
 	public static void main(String[] args) throws InterruptedException, IOException {
 		
 		System.out.println(new Date() + " Starting the process");
-		DomainModelCreator topic_triples = new DomainModelCreator("United_States_presidential_election,_2012");
+		DomainModelCreator topic_triples = new DomainModelCreator("Hurricane_Sandy");
 		List<Triple> triples = topic_triples.createModel();
 		for(Triple triple :triples){
 			//			buffer.append(triple.toString());

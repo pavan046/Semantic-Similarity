@@ -1,6 +1,7 @@
 package org.knoesis.api;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -8,9 +9,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang.time.DateFormatUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.knoesis.models.WikiRevision;
 import org.knoesis.utils.WikipediaConstants;
 
 /**
@@ -89,7 +92,7 @@ public class WikipediaParser {
 	private Format format; 
 	private static Map<String, String> params;
 	private static final boolean POST = true;
-	
+
 	/**
 	 * Constuctor takes in the wikipage you need to parse
 	 * 
@@ -104,15 +107,15 @@ public class WikipediaParser {
 		this.format = format;
 		conn = new HttpConnector(WikipediaConstants.API_URL);
 	}
-	
+
 	public WikipediaParser(){
 		// TODO Nothing but the class using this constructor has to call 
 		// the setWikipediaPage.
 		this.format = Format.JSON;
 		conn = new HttpConnector(WikipediaConstants.API_URL);
 	}
-	
-	
+
+
 	public WikipediaParser(String wikipediaPage) {
 		WikipediaParser.wikipediaPage = wikipediaPage;
 		this.format = Format.JSON;
@@ -122,7 +125,7 @@ public class WikipediaParser {
 	public void setWikipediaPage(String wikipediaPage){
 		this.wikipediaPage = wikipediaPage;
 	}
-	
+
 	/**
 	 * initializes the parameters for every call to the connect to the API
 	 * 
@@ -135,13 +138,13 @@ public class WikipediaParser {
 		params.put("page", wikipediaPage);
 		params.put("format", Format.JSON.toString());
 	}
-	
+
 	public String getLinksJson(){
 		initializeParams();
 		params.put("prop", "links");
 		return conn.response(params, POST);
 	}
-	
+
 	/**
 	 * This method takes time (format YYYYMMDDHHMMSS) and gives you the revisionID of the first page
 	 * edited at that time.
@@ -150,9 +153,9 @@ public class WikipediaParser {
 	 * @return
 	 */
 	public String getRevisionID(String time){
-		
+
 		//String timeString = String.valueOf(time);
-		
+
 		params = new HashMap<String, String>();
 		params.put("action","query");
 		params.put("titles", wikipediaPage);
@@ -163,7 +166,35 @@ public class WikipediaParser {
 		params.put("rvdir", "newer");
 		params.put("rvstart", time);		
 		return parseRevisionJson(conn.response(params, POST));
-		
+
+	}
+	/**
+	 * Returns the revsision with appropriate prameters 
+	 * 
+	 * Look into the Revision model for information on the 
+	 * values stored
+	 * 
+	 * TODO: Make this a recursive call by checking the final 
+	 * 		id and starting calling the same function from it
+	 * @return
+	 */
+	public List<WikiRevision> getRevisionInformation(){
+		List<WikiRevision> revisions = new ArrayList<WikiRevision>();
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("action","query");
+		params.put("titles", wikipediaPage);
+		params.put("format", Format.JSON.toString());
+		params.put("prop", "revisions");
+		params.put("rvprop", "ids|size|timestamp");
+		//params.put("rvstartid", "464689412");
+		params.put("rvlimit", "500");
+		try {
+			revisions = WikiRevision.serializeJsonObject(new JSONObject(conn.response(params, POST)));
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return revisions;
 	}
 
 	public Set<String> getLinks(){
@@ -174,14 +205,14 @@ public class WikipediaParser {
 		return parseJson("links", conn.response(params, POST));
 
 	}
-	
+
 	/**
 	 * This method takes revision ID and gives you all the links in that ID'ed page.
 	 * @param revisionID
 	 * @return
 	 */
 	public Set<String> getRevisionIDLinks(String time){
-		
+
 		String revisionID = getRevisionID(time);
 		params = new HashMap<String, String>();
 		params.put("action", "parse");
@@ -190,7 +221,7 @@ public class WikipediaParser {
 		params.put("prop", "links");
 		return parseJson("links", conn.response(params, POST));
 	}
-	
+
 	/**
 	 * TODO: The parsing of JSON should be an Interface and should parse 
 	 * 		jsons for all the properties above.
@@ -213,7 +244,7 @@ public class WikipediaParser {
 		}
 		return links;
 	}
-	
+
 	/**
 	 * This method is used to parse JSON to get revision ID
 	 * TODO Need to find a way to make this and the above methods more generic
@@ -222,23 +253,23 @@ public class WikipediaParser {
 	 */
 	public static String parseRevisionJson(String response){
 		String revisionID = null;
-		
+
 		try {
 			JSONObject jsonObject = new JSONObject(response);
 			JSONObject queryObject = jsonObject.getJSONObject("query");
 			JSONObject pagesObject = queryObject.getJSONObject("pages");
-			
+
 			String id = pagesObject.names().get(0).toString();			
 			JSONObject pageID = pagesObject.getJSONObject(id);			
 			JSONArray revisionsArray = pageID.getJSONArray("revisions");	
 			revisionID = revisionsArray.getJSONObject(0).getString("revid");
-			
+
 		} catch (JSONException e) {
 			// TODO: handle exception
 		}			
 		return revisionID;
 	}
-	
+
 	/**
 	 * This method gets all the new links that were added to a current wikipage from that of the 
 	 * same wikipage at a given past date
@@ -248,13 +279,13 @@ public class WikipediaParser {
 	public Set<String> getNewLinksAdded(String time){
 		Set<String> currentLinks = getLinks();
 		Set<String> linksFromPastPage = getRevisionIDLinks(time);
-		
+
 		currentLinks.removeAll(linksFromPastPage);
-	
-		
+
+
 		return currentLinks;
 	}
-	
+
 	/**
 	 * This method gets all the deleted links in the new page from that of the page in its 
 	 * revision history.
@@ -264,23 +295,39 @@ public class WikipediaParser {
 	public Set<String> getLinksDeleted(String time){
 		Set<String> currentLinks = getLinks();
 		Set<String> linksFromPastPage = getRevisionIDLinks(time);
-		
+
 		linksFromPastPage.removeAll(currentLinks);
-	
+
 		return linksFromPastPage;
 	}
-	
-	
-	
-	public static void main(String[] args) {
-		WikipediaParser wikiParser = new WikipediaParser("United_States_presidential_election,_2012");
-		System.out.println("Links that are added are:");
-		for(String link: wikiParser.getNewLinksAdded("20120501000000"))
-			System.out.println(link);
-		System.out.println("\n--------------------------------------------------\n");
-		System.out.println("Links that are deleted are:");
-		for(String link: wikiParser.getLinksDeleted("20120501000000"))
-			System.out.println(link);
-	}
 
+
+
+	public static void main(String[] args) {
+		WikipediaParser wikiParser = new WikipediaParser("Occupy Los Angeles");
+		//		System.out.println("Links that are added are:");
+		//		for(String link: wikiParser.getNewLinksAdded("20120501000000"))
+		//			System.out.println(link);
+		//		System.out.println("\n--------------------------------------------------\n");
+		//		System.out.println("Links that are deleted are:");
+		//		for(String link: wikiParser.getLinksDeleted("20120501000000"))
+		//			System.out.println(link);
+
+		List<WikiRevision> revisions = wikiParser.getRevisionInformation();
+		Map<Date, Integer> dateCount = new HashMap<Date, Integer>();
+		for (WikiRevision revision: revisions){
+			int value = revision.getSize();
+			if (value<0)
+				value = value*(-1);
+			Date date = revision.getDate();
+			if(dateCount.keySet().contains(date)){
+				dateCount.put(date, dateCount.get(date)+value);
+			}
+			else 
+				dateCount.put(date, value);
+		}
+		System.out.println(dateCount.keySet().size());
+		//		for(String date: dateCount.keySet())
+		//			System.out.println(date+"\t"+dateCount.get(date));
+	}
 }

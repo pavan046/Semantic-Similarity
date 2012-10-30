@@ -138,12 +138,12 @@ public class TopicSpecificSimilarityCalculator {
 		logger.info("Starting the process for US Elections 2012 " + System.currentTimeMillis());
 
 		try {
-			Writer write = new FileWriter(new File("analysis/olympics_jakkard.model"));
-			Writer writeTypes = new FileWriter(new File("analysis/olympics.types"));
+			Writer write = new FileWriter(new File("analysis/hurricane_sandy.model"));
+			Writer writeTypes = new FileWriter(new File("analysis/hurrycane_sandy.types"));
 			//United_States_presidential_election,_2012
-			TopicSpecificSimilarityCalculator wikiCalc = new TopicSpecificSimilarityCalculator("United States presidential election, 2012");
+			TopicSpecificSimilarityCalculator wikiCalc = new TopicSpecificSimilarityCalculator("Hurricane Sandy");
 			Map<String, Double> relatedLinks = wikiCalc.calculate();
-			wikiCalc.storeToDB("usElections2012");
+			wikiCalc.storeToDB("hurricaneSandy");
 //			for(String link: relatedLinks.keySet()){
 //				write.append(link+"\t"+relatedLinks.get(link)+"\n");
 //				List<String> types = DBpediaTypeGetter.getType(link);
@@ -154,7 +154,7 @@ public class TopicSpecificSimilarityCalculator {
 
 			write.close();
 			writeTypes.close();
-			logger.info("Ending the process for US Elections 2012 " + System.currentTimeMillis());
+			logger.info("Ending the process " + System.currentTimeMillis());
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

@@ -50,7 +50,7 @@ public class TweetDBStorageBolt implements IRichBolt{
 	@Override
 	public void execute(Tuple input) {
 		Status status = (Status)input.getValue(0);
-		dataStore.insertTweet(status, "usElections2012");		
+		dataStore.insertTweet(status, "hurricaneSandy");		
 	}
 
 }

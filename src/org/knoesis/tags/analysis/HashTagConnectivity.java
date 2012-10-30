@@ -129,11 +129,11 @@ public class HashTagConnectivity {
 	 * Provides the Global Clustering Co-efficient.
 	 * @return
 	 */
-	public static double getClusteringCoeff(){
+	public double getClusteringCoeff(){
 		Map<String, Double> metrics = Metrics.clusteringCoefficients(graph);
 		Double clusteringCoeff = 0.0d;
 		for(String tag: metrics.keySet()){
-			clusteringCoeff = metrics.get(tag);
+			clusteringCoeff += metrics.get(tag);
 		}
 		clusteringCoeff = clusteringCoeff/metrics.size();
 		return clusteringCoeff;
@@ -141,8 +141,8 @@ public class HashTagConnectivity {
 	/**
 	 * Visualizes the constucted Graph with ISOMLayout
 	 */
-	public static void graphVisualize(){
-		Layout<Integer, String> layout = new CircleLayout(graph);
+	public void graphVisualize(){
+		Layout<Integer, String> layout = new ISOMLayout(graph);
 		layout.setSize(new Dimension(800,800)); // sets the initial size of the space
 		// The BasicVisualizationServer<V,E> is parameterized by the edge types
 		BasicVisualizationServer<Integer,String> vv = 
@@ -175,7 +175,8 @@ public class HashTagConnectivity {
 	}
 	
 	public static void main(String[] args) {
-		HashTagConnectivity ds = new HashTagConnectivity("./analysis/clusters/ustags_popular_nocount_400", "./analysis/clusters/ustagsall.txt");
-		ds.graphVisualize();
+		HashTagConnectivity ds = new HashTagConnectivity("./analysis/hadoop/wallStreetProtests/wallStreetProtestsResults/clusters/all_tags", "./analysis/hadoop/wallStreetProtests/wallStreetProtestsResults/tag_tweetId");
+		//ds.graphVisualize();
+		System.out.println(ds.getClusteringCoeff());
 	}
 }
