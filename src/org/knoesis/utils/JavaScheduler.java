@@ -34,7 +34,7 @@ public class JavaScheduler {
 		scheduler.schedule("*/30 * * * *", new Runnable() {
 			public void run() {
 				System.out.println("Another minute ticked away..." + new Date() + " system time " + System.currentTimeMillis());
-				searchTwitter.getTweets("#apple", true, true);
+				searchTwitter.getTweets("#apple", "Apple", 100, true);
 			}
 		});
 		

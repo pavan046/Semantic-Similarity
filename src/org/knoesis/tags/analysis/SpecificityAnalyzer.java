@@ -37,7 +37,7 @@ public class SpecificityAnalyzer implements Analyzer {
 	public static void main(String[] args) {
 		List<Extractor> extractors = new ArrayList<Extractor>();
 		extractors.add(new TagExtractor());
-		HashTagAnalytics hashTag = new HashTagAnalytics("#obama");
+		HashTagAnalytics hashTag = new HashTagAnalytics("#obama", "usElection2012");
 		SpecificityAnalyzer specificity = new SpecificityAnalyzer();
 		specificity.analyze(hashTag);
 	}

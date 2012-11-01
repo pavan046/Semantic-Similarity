@@ -18,6 +18,8 @@ import java.sql.Time;
  *		 If this is being used just for tests its fine.
  */
 public class Utils {
+	
+	public final static int NO_OF_TWEETS = 100;
 	/**
 	 * One of the util function to make the process wait for x secs
 	 * @param secs

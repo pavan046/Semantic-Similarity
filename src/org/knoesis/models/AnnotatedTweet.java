@@ -34,7 +34,7 @@ public class AnnotatedTweet implements Serializable{
 	private Set<Triple> triples = new HashSet<Triple>();
 	private Set<URLModel> urlModels = new HashSet<URLModel>();
 	private Map<String, Integer> bagOfWords = new HashMap<String, Integer>();
-	
+	private String language = null;
 	/*
 	 *  The following two variables will be set while detecting the hashtags and
 	 *  is specific to this project.
@@ -177,6 +177,14 @@ public class AnnotatedTweet implements Serializable{
 	public void setContainsHashtagEquivalentToKeyword(
 			boolean containsHashtagEquivalentToKeyword) {
 		this.containsHashtagEquivalentToKeyword = containsHashtagEquivalentToKeyword;
+	}
+
+	public String getLanguage() {
+		return language;
+	}
+
+	public void setLanguage(String language) {
+		this.language = language;
 	}
 
 	

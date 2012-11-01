@@ -88,7 +88,7 @@ public class TagAnalyticsDataStore implements Serializable{
 	 * @param similarArticles
 	 * @param eventId
 	 */
-	public void insertWikiArticles(Map<String, Double> similarArticles,String eventId){
+	public void insertWikiArticles(Map<String, Double> similarArticles, String eventId){
 		String insertQuery = "Insert into topic_wikipedia_knowledge values(?, ?, ?, ?, ?)";
 		PreparedStatement prepareStatement;
 		try {

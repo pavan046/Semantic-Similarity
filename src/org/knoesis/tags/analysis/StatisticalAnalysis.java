@@ -32,6 +32,11 @@ import org.knoesis.utils.Utils;
  */
 public class StatisticalAnalysis {
 	
+	private static String event;
+	
+	public StatisticalAnalysis(String event) {
+		this.event = event;
+	}
 	/**
 	 * This method get the tweets from the DB (Which we are collecting for election2012), Gets all distinct hashtags and does
 	 * analytics on every hashtag.
@@ -77,7 +82,7 @@ public class StatisticalAnalysis {
 			analyzers.add(new ReTweetCounter());
 
 			// Calling the pipeline to process.
-			AnalyzerPipelineExecuter pipeline = new AnalyzerPipelineExecuter(analyzers);
+			AnalyzerPipelineExecuter pipeline = new AnalyzerPipelineExecuter(analyzers, event);
 			
 			Iterator<String> tagsIterator = hashTagsMap.keySet().iterator();
 			while(tagsIterator.hasNext()){
@@ -94,7 +99,7 @@ public class StatisticalAnalysis {
 	}
 	
 	public static void main(String[] args) {
-		StatisticalAnalysis analyzer = new StatisticalAnalysis();
+		StatisticalAnalysis analyzer = new StatisticalAnalysis(args[0]);
 		analyzer.analyze();
 	}
 }

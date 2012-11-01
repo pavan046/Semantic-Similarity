@@ -56,7 +56,7 @@ public class EntropyCalculator {
 		extractors.add(new TagExtractor());
 		SearchTwitter searchTwitter = new SearchTwitter(extractors);
 		// This will get the last 1500 annotated Tweets.
-		List<AnnotatedTweet> tweetsOfHashtag = searchTwitter.getTweets("#tcot", true, false);
+		List<AnnotatedTweet> tweetsOfHashtag = searchTwitter.getTweets("#tcot", "usElection2012", 100, true);
 		TermFrequencyGenerator termFrequencyGenerator = new TermFrequencyGenerator();
 		Map<String, Double> termFrequency = termFrequencyGenerator.extractListTweets(tweetsOfHashtag);
 		System.out.println(termFrequency);

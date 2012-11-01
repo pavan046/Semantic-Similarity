@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.knoesis.twarql.extractions.DBpediaSpotlightExtractor;
 import org.knoesis.twarql.storm.bolts.TagExtractorBolt;
 import org.knoesis.twarql.storm.bolts.TweetDBStorageBolt;
 import org.knoesis.twarql.storm.spouts.TwarqlSpout;
@@ -56,7 +57,7 @@ public class TwarqlTopology
 			
 			// Setup the Local Cluster for Testing Purposes
 			LocalCluster cluster = new LocalCluster();
-			cluster.submitTopology("TwitrisTopology", conf, builder.createTopology());
+			cluster.submitTopology("TwarqlTopology", conf, builder.createTopology());
 			
 			// Shut the Cluster Down after X Minutes.
 //			Utils.sleep(1 * 50 * 1000);

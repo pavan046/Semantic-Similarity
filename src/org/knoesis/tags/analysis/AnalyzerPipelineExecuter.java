@@ -30,13 +30,15 @@ public class AnalyzerPipelineExecuter {
 
 	List<Analyzer> analyzers = new ArrayList<Analyzer>();
 	private Map<String, Double> resultsMap = new HashMap<String, Double>();
+	private String event;
 
 	/**
 	 * This constructor takes in the list of analyzers like frequency,specificity etc
 	 * @param analyzers
 	 */
-	public AnalyzerPipelineExecuter(List<Analyzer> analyzers){
+	public AnalyzerPipelineExecuter(List<Analyzer> analyzers, String event){
 		this.analyzers = analyzers;
+		this.event = event;
 	}
 
 	/**
@@ -54,7 +56,7 @@ public class AnalyzerPipelineExecuter {
 	}
 	
 	public HashTagAnalytics process(String hashTag){
-		HashTagAnalytics hashTagAnalytics = new HashTagAnalytics(hashTag);
+		HashTagAnalytics hashTagAnalytics = new HashTagAnalytics(hashTag, event);
 		for (Analyzer analyzer: analyzers)
 			analyzer.analyze(hashTagAnalytics);
 		return hashTagAnalytics;
@@ -85,7 +87,7 @@ public class AnalyzerPipelineExecuter {
 		analyzers.add(new TagTopicCosineSimilarityAnalyzer());
 		analyzers.add(new TagTopicSubsumptionSimilarityCalculator());
 		// Calling the pipeline to process.
-		AnalyzerPipelineExecuter pipeline = new AnalyzerPipelineExecuter(analyzers);
+		AnalyzerPipelineExecuter pipeline = new AnalyzerPipelineExecuter(analyzers, args[0]);
 		Set<String> tags = db.getTopTags(50);
 		for (String tag: tags){
 			if (tag.equalsIgnoreCase("#sandy"))

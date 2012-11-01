@@ -51,8 +51,9 @@ public class HashTagAnalytics {
 	// This will get the last 1500 annotated Tweets.
 
 	private Extractor dbpediaExtractor = new DBpediaSpotlightExtractor();
-	public HashTagAnalytics(String hashTag) {
+	public HashTagAnalytics(String hashTag, String presentTopic) {
 		this.setHashTag(hashTag);
+		this.setPresentTopic(presentTopic);
 		this.setTermWithoutHash(hashTag.replace("#", ""));
 		this.setTimeOfAnalysis(System.currentTimeMillis());
 		this.generateTweets();
@@ -77,11 +78,11 @@ public class HashTagAnalytics {
 		extractors.add(new DBpediaSpotlightExtractor());
 		searchTwitter = new SearchTwitter(extractors);
 		termFreqGenerator = new TermFrequencyGenerator();
-		List<AnnotatedTweet> aTweetsOfHashTagFromAPI = searchTwitter.getTweets(hashTag, true, true);
+		List<AnnotatedTweet> aTweetsOfHashTagFromAPI = searchTwitter.getTweets(hashTag, this.presentTopic, Utils.NO_OF_TWEETS, true);
 		this.setNoOfTweets(aTweetsOfHashTagFromAPI.size());
 		this.setaTweetsOfHashTag(aTweetsOfHashTagFromAPI);
 		// The third parameter here is flag to set to whether to store the tweets into DB or not.
-		this.setaTweetsOfKeyword(searchTwitter.getTweets(termWithoutHash, false, false));
+		this.setaTweetsOfKeyword(searchTwitter.getTweets(termWithoutHash, this.presentTopic, Utils.NO_OF_TWEETS, false));
 		this.setTermFrequencyOfHashTag(termFreqGenerator.extractListTweets(this.aTweetsOfHashTag));
 		this.setTermFrequencyOfKeyword(termFreqGenerator.extractListTweets(this.aTweetsOfKeyword));
 		this.setEntityFrequecy();

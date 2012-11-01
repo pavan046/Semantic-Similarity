@@ -58,18 +58,22 @@ public class SearchTwitter {
 	 *                       false: do not store.                      
 	 * 
 	 */
-	public List<AnnotatedTweet> getTweets(String tag, boolean isHashTag, boolean storeToDB) {
+	public List<AnnotatedTweet> getTweets(String tag, String eventID, int numberOfTweets, boolean isHashTag) {
+		
+		
+		boolean storeToDB = true;
 		TagAnalyticsDataStore dbStore = new TagAnalyticsDataStore();
 		Twitter twitter = new TwitterFactory().getInstance();
 		Query query = new Query(tag); 	// Query for the search
-		query.setRpp(100);	//default is 15 tweets/search which is set to 100
+		query.setRpp(100); //default is 15 tweets/search which is set to 100
+		query.setLang("en");
 		QueryResult result = null;
 		List<AnnotatedTweet> tweets = new ArrayList<AnnotatedTweet>();
 		List<Tweet> tweetsFromAPI = null;
 
 		
 		
-		for(int i=1; i<=1; i++){
+		for(int i=1; i<=numberOfTweets/100; i++){
 			query.setPage(i);
 			try {
 				//System.out.println(query);
@@ -96,8 +100,8 @@ public class SearchTwitter {
 				
 				if(storeToDB){
 					// The eventID will be Hash_ followed by the Hashtag.		
-					dbStore.storeSearchTweetsIntoDB(tweetsFromAPI, "usElections2012", tag);
-					dbStore.storeEntities(tweets, tag);
+					//dbStore.storeSearchTweetsIntoDB(tweetsFromAPI, eventID, tag);
+					//dbStore.storeEntities(tweets, tag);
 				}
 			}
 		}
@@ -143,11 +147,12 @@ public class SearchTwitter {
 	public static void main(String[] args) {
 		List<Extractor> extractors = new ArrayList<Extractor>();
 		extractors.add(new TagExtractor());
-		extractors.add(new DBpediaSpotlightExtractor());
+		//extractors.add(new DBpediaSpotlightExtractor());
 		SearchTwitter searchTwitter = new SearchTwitter(extractors);
-		List<AnnotatedTweet> aTweets = searchTwitter.getTweets("#election2012", false, true);
+		List<AnnotatedTweet> aTweets = searchTwitter.getTweets("#eeuu", "usElections2012", 200, true);
 		Map<String, Integer> tags = new HashMap<String, Integer>();
 		for(AnnotatedTweet aTweet: aTweets){
+			System.out.println(aTweet.getTwitter4jTweet().getText());
 			for(String tag: aTweet.getHashtags()){
 				if(tags.keySet().contains(tag.toLowerCase()))
 					tags.put(tag.toLowerCase(), tags.get(tag.toLowerCase())+1);
@@ -155,6 +160,7 @@ public class SearchTwitter {
 					tags.put(tag.toLowerCase(), 1);
 			}
 		}
+		System.out.println(aTweets.size());
 		System.out.println(tags);
 	}
 
