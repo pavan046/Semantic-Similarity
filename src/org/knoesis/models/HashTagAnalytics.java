@@ -87,7 +87,7 @@ public class HashTagAnalytics {
 		this.setTermFrequencyOfKeyword(termFreqGenerator.extractListTweets(this.aTweetsOfKeyword));
 		this.setEntityFrequecy();
 	}
-
+	
 	
 	public String getHashTag() {
 		return hashTag;

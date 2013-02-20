@@ -167,7 +167,7 @@ public class TwarqlSpout implements IRichSpout
 //	     
 //		 String[] keywords = (String[]) keywordList.toArray(new String[keywordList.size()]);
 //	     String[] keywords = {"twitrist"};
-	     String[] keywords = {"#sandy"};
+	     String[] keywords = {"#election2012"};
 	     filterQuery.track((String[]) keywords);
 	     twitterStream.filter(filterQuery);
 	     

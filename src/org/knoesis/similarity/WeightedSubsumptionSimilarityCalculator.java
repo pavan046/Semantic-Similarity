@@ -63,6 +63,11 @@ public class WeightedSubsumptionSimilarityCalculator {
 		return subsumptionSimilarities;
 	}
 	
+	public static double calculateWeightedSubsumtion(Map<String, Double> subset, Map<String, Double> set){
+		Map<Integer, Double> results = WeightedSubsumptionSimilarityCalculator.calculate(subset, set);
+		return results.get(1);
+	}
+	
 		
 	public static void main(String[] args) {
 		TagAnalyticsDataStore ds = new TagAnalyticsDataStore();

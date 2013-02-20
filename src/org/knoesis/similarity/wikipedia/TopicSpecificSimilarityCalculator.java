@@ -138,12 +138,12 @@ public class TopicSpecificSimilarityCalculator {
 		logger.info("Starting the process for US Elections 2012 " + System.currentTimeMillis());
 
 		try {
-			Writer write = new FileWriter(new File("analysis/hurricane_sandy.model"));
-			Writer writeTypes = new FileWriter(new File("analysis/hurrycane_sandy.types"));
+			Writer write = new FileWriter(new File("analysis/elections.model"));
+			Writer writeTypes = new FileWriter(new File("analysis/elections.types"));
 			//United_States_presidential_election,_2012
-			TopicSpecificSimilarityCalculator wikiCalc = new TopicSpecificSimilarityCalculator("Hurricane Sandy");
+			TopicSpecificSimilarityCalculator wikiCalc = new TopicSpecificSimilarityCalculator("United States presidential election, 2012");
 			Map<String, Double> relatedLinks = wikiCalc.calculate();
-			wikiCalc.storeToDB("hurricaneSandy");
+			wikiCalc.storeToDB("usElections2012");
 //			for(String link: relatedLinks.keySet()){
 //				write.append(link+"\t"+relatedLinks.get(link)+"\n");
 //				List<String> types = DBpediaTypeGetter.getType(link);

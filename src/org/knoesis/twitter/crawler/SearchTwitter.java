@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.knoesis.models.AnnotatedTweet;
 import org.knoesis.storage.TagAnalyticsDataStore;
@@ -67,6 +68,8 @@ public class SearchTwitter {
 		Query query = new Query(tag); 	// Query for the search
 		query.setRpp(100); //default is 15 tweets/search which is set to 100
 		query.setLang("en");
+		//query.setUntil("2012-10-31");
+		query.maxId(264434742504599553L);
 		QueryResult result = null;
 		List<AnnotatedTweet> tweets = new ArrayList<AnnotatedTweet>();
 		List<Tweet> tweetsFromAPI = null;
@@ -100,7 +103,7 @@ public class SearchTwitter {
 				
 				if(storeToDB){
 					// The eventID will be Hash_ followed by the Hashtag.		
-					//dbStore.storeSearchTweetsIntoDB(tweetsFromAPI, eventID, tag);
+					dbStore.storeSearchTweetsIntoDB(tweetsFromAPI, eventID, tag, false);
 					//dbStore.storeEntities(tweets, tag);
 				}
 			}
@@ -149,19 +152,29 @@ public class SearchTwitter {
 		extractors.add(new TagExtractor());
 		//extractors.add(new DBpediaSpotlightExtractor());
 		SearchTwitter searchTwitter = new SearchTwitter(extractors);
-		List<AnnotatedTweet> aTweets = searchTwitter.getTweets("#eeuu", "usElections2012", 200, true);
-		Map<String, Integer> tags = new HashMap<String, Integer>();
-		for(AnnotatedTweet aTweet: aTweets){
-			System.out.println(aTweet.getTwitter4jTweet().getText());
-			for(String tag: aTweet.getHashtags()){
-				if(tags.keySet().contains(tag.toLowerCase()))
-					tags.put(tag.toLowerCase(), tags.get(tag.toLowerCase())+1);
-				else
-					tags.put(tag.toLowerCase(), 1);
-			}
+		TagAnalyticsDataStore dbHandler = new TagAnalyticsDataStore();
+		Set<String> tagsSet = dbHandler.getTopTags(26);
+		for (String tag: tagsSet){
+			System.out.println(tag);
+			if(tag.equalsIgnoreCase("#election2012"))
+				continue;
+			List<AnnotatedTweet> aTweets = searchTwitter.getTweets(tag, "usElections2012", 500, true);
 		}
-		System.out.println(aTweets.size());
-		System.out.println(tags);
+//		List<AnnotatedTweet> aTweets = searchTwitter.getTweets("#election2012", "usElections2012", 1500, true);
+		//System.out.println(searchTwitter.getTweets("#usa", "hurricaneSandy", 500, true).size());
+//		List<AnnotatedTweet> aTweets = searchTwitter.getTweets("#eeuu", "usElections2012", 100, true);
+//		Map<String, Integer> tags = new HashMap<String, Integer>();
+//		for(AnnotatedTweet aTweet: aTweets){
+//			System.out.println(aTweet.getTwitter4jTweet().getText());
+//			for(String tag: aTweet.getHashtags()){
+//				if(tags.keySet().contains(tag.toLowerCase()))
+//					tags.put(tag.toLowerCase(), tags.get(tag.toLowerCase())+1);
+//				else
+//					tags.put(tag.toLowerCase(), 1);
+//			}
+//		}
+//		System.out.println(aTweets.size());
+//		System.out.println(tags);
 	}
 
 }

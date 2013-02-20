@@ -51,7 +51,7 @@ public class TagAnalyticsDataStore implements Serializable{
 		connectionProperties.put("user", "root");
 		connectionProperties.put("password", "root");
 		try {
-			con = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/tagsim",
+			con = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/elections",
 					connectionProperties);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -159,8 +159,8 @@ public class TagAnalyticsDataStore implements Serializable{
 		// ==PreparedStatement pstmt;=========== twitterdata table ===============
 		String sql = "INSERT IGNORE INTO `twitterdata` "
 				+ "(`twitter_ID`, `tweet`, `eventID`, `published_date`, "
-				+ "`twitter_author`, `latitude`, `longitude`) "
-				+ "VALUES ( ?, ?, ?, ?, ?, ?, ? );";
+				+ "`twitter_author`, `latitude`, `longitude`, `retweet`) "
+				+ "VALUES ( ?, ?, ?, ?, ?, ?, ?, ? );";
 
 		try {
 			ps = con.prepareStatement(sql);
@@ -185,6 +185,10 @@ public class TagAnalyticsDataStore implements Serializable{
 			ps.setString(5, twitter_author);
 			ps.setFloat(6, (float)latitude);
 			ps.setFloat(7, (float)longitude);
+			if(tweetContent.startsWith("RT"))
+				ps.setInt(8, 1);
+			else
+				ps.setInt(8, 0);
 
 			ps.executeUpdate();
 
@@ -234,18 +238,21 @@ public class TagAnalyticsDataStore implements Serializable{
 	 * @param tweets
 	 * @param eventID
 	 */
-	public void storeSearchTweetsIntoDB(List<Tweet> tweets, String eventID, String tag){
-
+	public void storeSearchTweetsIntoDB(List<Tweet> tweets, String eventID, String tag, boolean isAfter){
+		String tableName = "twitterdata_tag_analytics";
+		
+		if(isAfter)
+			tableName = "twitterdata_tag_analytics_after";
 		// Please replace this with the correct username and password.
 		PreparedStatement ps = null;
 		double latitude = 10000;
 		double longitude = 10000;
 
 		// ==PreparedStatement pstmt;=========== twitterdata table ===============
-		String sql = "INSERT IGNORE INTO `twitterdata_tag_analytics` "
+		String sql = "INSERT IGNORE INTO `"+tableName+"` "
 				+ "(`twitter_ID`, `tweet`, `eventID`, `published_date`, "
-				+ "`twitter_author`, `latitude`, `longitude`, `hashtag`) "
-				+ "VALUES ( ?, ?, ?, ?, ?, ?, ?, ? );";
+				+ "`twitter_author`, `latitude`, `longitude`, `hashtag`, `retweet`) "
+				+ "VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ? );";
 
 		try {
 			ps = con.prepareStatement(sql);
@@ -272,6 +279,10 @@ public class TagAnalyticsDataStore implements Serializable{
 				ps.setFloat(6, (float)latitude);
 				ps.setFloat(7, (float)longitude);
 				ps.setString(8, tag);
+				if(tweetContent.startsWith("RT"))
+					ps.setInt(9, 1);
+				else
+					ps.setInt(9, 0);
 				ps.addBatch();
 
 			}

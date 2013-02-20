@@ -3,6 +3,9 @@ package org.knoesis.tags.analysis;
 import java.awt.Dimension;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -39,15 +42,17 @@ public class HashTagConnectivity {
 	private static Graph<String, String> graph;
 	private static File popularTagsFile, tweetTagFile;
 	private static List<String> popularTags;
+	private static int tagsToConsider = 0;
 	/**
 	 * @param populatTagsFileName -- Tags to be considered
 	 * @param tweetTagFileName -- <Tweetid> <tag> to generate co-occurrance graph
 	 */
-	public HashTagConnectivity(String populatTagsFileName, String tweetTagFileName) {
+	public HashTagConnectivity(String populatTagsFileName, String tweetTagFileName, int tagsToConsider) {
 		graph = new UndirectedSparseGraph<String, String>();
 		popularTags = new ArrayList<String>();
 		popularTagsFile = new File(populatTagsFileName);
 		tweetTagFile = new File(tweetTagFileName);
+		this.tagsToConsider = tagsToConsider;
 		populatePopularTagsList();
 		generateGraphFromFile();
 	}
@@ -59,10 +64,14 @@ public class HashTagConnectivity {
 		Scanner readPopTagFile;
 		try {
 			readPopTagFile = new Scanner(popularTagsFile);
+			int i=0;
 			while(readPopTagFile.hasNext()){
+				if (i== tagsToConsider)
+					break;
 				String tag = readPopTagFile.nextLine();
 				popularTags.add(tag);
 				graph.addVertex(tag);	
+				i++;
 			}
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -131,6 +140,7 @@ public class HashTagConnectivity {
 	 */
 	public double getClusteringCoeff(){
 		Map<String, Double> metrics = Metrics.clusteringCoefficients(graph);
+		//System.out.println(metrics.size());
 		Double clusteringCoeff = 0.0d;
 		for(String tag: metrics.keySet()){
 			clusteringCoeff += metrics.get(tag);
@@ -149,34 +159,64 @@ public class HashTagConnectivity {
 				new BasicVisualizationServer<Integer,String>(layout);
 		vv.setPreferredSize(new Dimension(350,350)); //Sets the viewing area size
 		BasicVisualizationServer<Integer,String> bvv = 
-	              new BasicVisualizationServer<Integer,String>(layout);
+				new BasicVisualizationServer<Integer,String>(layout);
 		vv.getRenderContext().setVertexLabelTransformer(new ToStringLabeller<Integer>());
-		
+
 		JFrame frame = new JFrame("Simple Graph View");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().add(vv); 
 		frame.pack();
 		frame.setVisible(true);    
 	}
-	
+
+	public static void reach(){
+		for(String tag: popularTags){
+			//popularTags.remove(tag);
+			System.out.println(tag +":"+reachability(tag));
+		}
+	}
+
 	public static int reachability(String tag){
 		DijkstraShortestPath shortestPath = new DijkstraShortestPath<String, String>(graph);
 		Map<String, Double> distanceMap = shortestPath.getDistanceMap(tag, popularTags);
-		System.out.println(distanceMap.keySet      ().size() + " -- " + popularTags.size());
+		//System.out.println(distanceMap.keySet().size() + " -- " + popularTags.size());
 		int i = 1;
 		for(String vertex: popularTags){
+			if(vertex.equalsIgnoreCase(tag))
+				continue;
 			if(!distanceMap.keySet().contains(vertex))
 				System.out.println(i+ " -- ERR: " + vertex);
-			else
-				System.out.println(i+ ": "+ vertex+": "+distanceMap.get(vertex));
+			//else
+			//System.out.println(i+ ": "+ vertex+": "+distanceMap.get(vertex));
 			i++;
 		}
 		return i;
 	}
-	
+
+	public void writeGraphToFile(File file){
+		try {
+			Writer fileWriter = new FileWriter(file);
+			Collection<String> edges = graph.getEdges();
+			for(String edge: edges){
+				fileWriter.append(edge.replace("-", ";")+"\n");
+			}
+			fileWriter.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
 	public static void main(String[] args) {
-		HashTagConnectivity ds = new HashTagConnectivity("./analysis/hadoop/wallStreetProtests/wallStreetProtestsResults/clusters/all_tags", "./analysis/hadoop/wallStreetProtests/wallStreetProtestsResults/tag_tweetId");
-		//ds.graphVisualize();
-		System.out.println(ds.getClusteringCoeff());
+		//for (int i=20; i<=200; i=i+20){
+			//HashTagConnectivity ds = new HashTagConnectivity("./analysis/hadoop/coloradoShooting/coloradoShootingResults/clusters/occurrance/all_tags.txt", "./analysis/hadoop/coloradoShooting/coloradoShootingResults/tag_tweetId", 70);
+			HashTagConnectivity ds = new HashTagConnectivity("./analysis/hadoop/wallStreetProtests/wallStreetProtestsResults/clusters/all_tags.txt", "./analysis/hadoop/wallStreetProtests/wallStreetProtestsResults/tag_tweetId", 200);
+			//ds.graphVisualize();
+			//System.out.println(i+"\t"+ds.getClusteringCoeff());
+			ds.reach();
+			//ds.graphVisualize();
+			//ds.writeGraphToFile(new File("./analysis/clusters/wallstreet/" +i+".csv"));
+		//}
 	}
 }
