@@ -26,6 +26,7 @@ import org.knoesis.utils.Utils;
 
 import twitter4j.Status;
 import twitter4j.Tweet;
+import twitter4j.User;
 
 import com.ibm.icu.util.Calendar;
 
@@ -49,10 +50,12 @@ public class TagAnalyticsDataStore implements Serializable{
 		//Set hosts
 		Properties connectionProperties = new Properties();
 		connectionProperties.put("user", "root");
-		connectionProperties.put("password", "root");
+		connectionProperties.put("password", "admin");
 		try {
-			con = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/elections",
-					connectionProperties);
+			//con = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/twitterdata",
+			//		connectionProperties);
+			con = DriverManager.getConnection("jdbc:mysql://twarql.knoesis.org:3306/twitterdata_elections",
+							connectionProperties);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -145,6 +148,64 @@ public class TagAnalyticsDataStore implements Serializable{
 		}
 		return tags;
 	}
+	
+	public void storeAnnotatedTweetsIntoDB(AnnotatedTweet aTweet, String eventID,
+			String tag, boolean isAfter) {
+		String tableName = "twitterdata_tag_analytics";
+		Status tweet = aTweet.getStatusTweet();
+		if(isAfter)
+			tableName = "twitterdata_tag_analytics";
+		// Please replace this with the correct username and password.
+		PreparedStatement ps = null;
+		double latitude = 10000;
+		double longitude = 10000;
+
+		// ==PreparedStatement pstmt;=========== twitterdata table ===============
+		String sql = "INSERT IGNORE INTO `"+tableName+"` "
+				+ "(`twitter_ID`, `tweet`, `eventID`, `published_date`, "
+				+ "`twitter_author`, `latitude`, `longitude`, `hashtag`, `retweet`) "
+				+ "VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ? );";
+
+		try {
+			ps = con.prepareStatement(sql);
+
+				String tweetContent = tweet.getText();
+				String twitterID = String.valueOf(tweet.getId());
+				String twitter_author = tweet.getUser().getScreenName();
+				Date published_date = tweet.getCreatedAt();
+				if(tweet.getGeoLocation() != null)
+				{
+					latitude = tweet.getGeoLocation().getLatitude();
+					longitude = tweet.getGeoLocation().getLongitude();
+				}			
+
+				ps.setString(1, twitterID);
+				ps.setString(2, tweetContent);
+				ps.setString(3, eventID);
+
+				// hard fix for now; trying to set time stamp to GMT timezone
+				ps.setTimestamp(4, new java.sql.Timestamp(published_date.getTime()
+						+ (long) 1000 * 60 * 60 * 5));
+				ps.setString(5, twitter_author);
+				ps.setFloat(6, (float)latitude);
+				ps.setFloat(7, (float)longitude);
+				ps.setString(8, tag);
+				if(tweetContent.startsWith("RT"))
+					ps.setInt(9, 1);
+				else
+					ps.setInt(9, 0);
+				ps.addBatch();
+
+			int[] addCount = ps.executeBatch();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		List<AnnotatedTweet> aTweets = new ArrayList<AnnotatedTweet>();
+		aTweets.add(aTweet);
+		storeEntities(aTweets, tag);
+	}
+
 
 	/**
 	 * Inserts the tweet into the database from streaming API. 
@@ -304,7 +365,7 @@ public class TagAnalyticsDataStore implements Serializable{
 				for(String entity: tweet.getEntities()){
 					entity = Utils.dbpediaDecode(entity);
 					ps.setString(1, tag);
-					ps.setString(2, ((Long)tweet.getTwitter4jTweet().getId()).toString());
+					ps.setString(2, ((Long)tweet.getStatusTweet().getId()).toString());
 					ps.setString(3, entity);
 					ps.setDate(4, date);
 
@@ -460,20 +521,15 @@ public class TagAnalyticsDataStore implements Serializable{
 	public static void main(String[] args) {
 		TagAnalyticsDataStore dataStore = new TagAnalyticsDataStore();
 		//		//dataStore.insertURL("http://news.carbon-future.co.uk/archives/42856", "224267191476953089");
-		//		Set<String> tags = new HashSet<String>();
-		//		tags.add("#something");
-		//		tags.add("#obama");
-		//		dataStore.batchInsertTags("11123112341423", tags);
+				Set<String> tags = new HashSet<String>();
+				tags.add("#something");
+				tags.add("#obama");
+				dataStore.batchInsertTags("11123112341423", tags);
 		//		Map<String, Double> relatedArticles = new HashMap<String, Double>();
 		//		relatedArticles.put("United States", 3.23412134d);
 		//		relatedArticles.put("Barack Obama", 2.234123415345d);
 		//		dataStore.insertWikiArticles(relatedArticles, "uselections");
 		dataStore.addTags();
 	}
-
-
-
-
-
 
 }

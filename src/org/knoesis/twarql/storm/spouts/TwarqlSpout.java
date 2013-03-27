@@ -36,6 +36,8 @@ import twitter4j.conf.ConfigurationBuilder;
 * 
 * Note: It is heavily based on Nathan Marz's TwitterSampleSpout found in the 
 * "storm-starter" project: https://github.com/nathanmarz/storm-starter 
+* 
+* 
 */
 public class TwarqlSpout implements IRichSpout 
 {
@@ -138,7 +140,7 @@ public class TwarqlSpout implements IRichSpout
 				// Nothing done here, yet...
 			}
 		};
-		
+		//TODO: Need to make it flexible for both location based and keyword based
 		// Start The Stream
 		LOG.info("Starting the twitter Stream for the user "+this.twitterUserName);
 		TwitterStreamFactory fact = new TwitterStreamFactory(
@@ -167,8 +169,14 @@ public class TwarqlSpout implements IRichSpout
 //	     
 //		 String[] keywords = (String[]) keywordList.toArray(new String[keywordList.size()]);
 //	     String[] keywords = {"twitrist"};
-	     String[] keywords = {"#election2012"};
-	     filterQuery.track((String[]) keywords);
+	     //Keyword based
+	    // String[] keywords = {"obama"};
+	     //filterQuery.track((String[]) keywords);
+	     
+	     //Location based
+	     double[][] locations = {{-180, -90},{180,90}};
+	     filterQuery.locations(locations);
+	     
 	     twitterStream.filter(filterQuery);
 	     
 		

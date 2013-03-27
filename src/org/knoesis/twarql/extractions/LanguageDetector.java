@@ -57,7 +57,7 @@ public class LanguageDetector implements Extractor<String> {
 			detector.append(text.toString());
 			resultLang = detector.detect();
 		} catch (LangDetectException e) {
-			// TODO Auto-generated catch block
+			// LOG to do nothing here. 
 			e.printStackTrace();
 		}
 
@@ -73,6 +73,6 @@ public class LanguageDetector implements Extractor<String> {
 		LanguageDetector langDetector = new LanguageDetector();
 		//langDetector.init("./langprofiles");
 		System.out.println(langDetector.extract("I am missing something here.. not sure what"));
-		System.out.println(langDetector.extract("La pol’tica es dar multas a los infractores"));
+		System.out.println(langDetector.extract("La polï¿½tica es dar multas a los infractores"));
 	}
 }

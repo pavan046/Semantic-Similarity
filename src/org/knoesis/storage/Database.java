@@ -18,7 +18,7 @@ public class Database {
 	public static Connection getConnectionToDB(String username,String password){
 		Connection conn = null;
 		System.out.println(new Date() + " Connecting to Database");
-		String url = "jdbc:mysql://130.108.5.96/twitris_healthcare?user=" + username + "&password=" + password;
+		String url = "jdbc:mysql://twarql.knoesis.org/twitterdata?user=" + username + "&password=" + password;
 
 		try {
 			Class.forName("com.mysql.jdbc.Driver").newInstance();

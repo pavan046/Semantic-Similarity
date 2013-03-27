@@ -5,6 +5,8 @@ import java.io.IOException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.knoesis.twarql.extractions.DBpediaSpotlightExtractor;
+import org.knoesis.twarql.storm.bolts.LanguageDetectorBolt;
+import org.knoesis.twarql.storm.bolts.PrinterBolt;
 import org.knoesis.twarql.storm.bolts.TagExtractorBolt;
 import org.knoesis.twarql.storm.bolts.TweetDBStorageBolt;
 import org.knoesis.twarql.storm.spouts.TwarqlSpout;
@@ -44,8 +46,10 @@ public class TwarqlTopology
 		LOG.debug("Creating the required Topology");
 		TopologyBuilder builder = new TopologyBuilder();
 		builder.setSpout(1, new TwarqlSpout(userName, password));
-		builder.setBolt(2, new TagExtractorBolt(), 1).shuffleGrouping(1);
-		builder.setBolt(3, new TweetDBStorageBolt(), 1).shuffleGrouping(1);
+		builder.setBolt(2, new LanguageDetectorBolt(), 1).shuffleGrouping(1);
+		builder.setBolt(3, new TagExtractorBolt(), 2).shuffleGrouping(2);
+		builder.setBolt(4, new TweetDBStorageBolt(), 2).shuffleGrouping(2);
+		//builder.setBolt(3, new PrinterBolt(), 2).shuffleGrouping(2);
 		boolean localMode = true;
 		
 		// LocalMode Deployment		

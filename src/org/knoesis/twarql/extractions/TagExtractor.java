@@ -30,7 +30,7 @@ public class TagExtractor implements Extractor {
 
 	@Override
 	public void process(AnnotatedTweet tweet) {
-		tweet.setHashtags(extract(tweet.getTwitter4jTweet().getText()));
+		tweet.setHashtags(extract(tweet.getStatusTweet().getText()));
 	}
 
 	public static void main(String[] args) {

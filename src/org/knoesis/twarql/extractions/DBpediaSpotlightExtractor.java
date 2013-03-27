@@ -147,8 +147,8 @@ public class DBpediaSpotlightExtractor implements Extractor {
 		//FIXME WARNING!!!! This is bad practice. We are resetting the entities in every processor
 		//                  So if two processors try to set the same field, one will overrule the other.
 		//                  Should have instead an updateEntities() method.
-		tweet.setEntities(extract(tweet.getTwitter4jTweet().getText()));
-		if (tweet.getTwitter4jTweet().getText().toLowerCase().contains("sandy")){
+		tweet.setEntities(extract(tweet.getStatusTweet().getText()));
+		if (tweet.getStatusTweet().getText().toLowerCase().contains("sandy")){
 				tweet.getEntities().add("http://dbpedia.org/resource/Hurricane_Sandy");
 		}
 	}
